@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android">
+    <Row>
+        <Key codes="1590" keyLabel="ض" popupCharacters="1" keyWidth="9" />
+        <Key codes="1589" keyLabel="ص" popupCharacters="2" keyWidth="9" />
+        <Key codes="1579" keyLabel="ث" popupCharacters="3" keyWidth="9" />
+        <Key codes="1602" keyLabel="ق" popupCharacters="4" keyWidth="9" />
+        <Key codes="1601" keyLabel="ف" popupCharacters="5" keyWidth="9" />
+        <Key codes="1594" keyLabel="غ" popupCharacters="6" keyWidth="9" />
+        <Key codes="1593" keyLabel="ع" popupCharacters="7" keyWidth="9" />
+        <Key codes="1607" keyLabel="ه" popupCharacters="8" keyWidth="9" />
+        <Key codes="1582" keyLabel="خ" popupCharacters="9" keyWidth="9" />
+        <Key codes="1581" keyLabel="ح" popupCharacters="0" keyWidth="9" />
+        <Key codes="1580" keyLabel="ج" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="1588" keyLabel="ش" keyWidth="9" />
+        <Key codes="1587" keyLabel="س" keyWidth="9" />
+        <Key codes="1610" keyLabel="ي" keyWidth="9" />
+        <Key codes="1576" keyLabel="ب" keyWidth="9" />
+        <Key codes="1604" keyLabel="ل" keyWidth="9" />
+        <Key codes="1575" keyLabel="ا" popupCharacters="أإآ" keyWidth="9" />
+        <Key codes="1578" keyLabel="ت" keyWidth="9" />
+        <Key codes="1606" keyLabel="ن" keyWidth="9" />
+        <Key codes="1605" keyLabel="م" keyWidth="9" />
+        <Key codes="1603" keyLabel="ك" keyWidth="9" />
+        <Key codes="1591" keyLabel="ط" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="-1"  keyLabel="⇧" keyWidth="13" />
+        <Key codes="1574" keyLabel="ئ" keyWidth="9" />
+        <Key codes="1569" keyLabel="ء" keyWidth="9" />
+        <Key codes="1572" keyLabel="ؤ" keyWidth="9" />
+        <Key codes="1585" keyLabel="ر" keyWidth="9" />
+        <Key codes="1604" keyLabel="ﻻ" keyWidth="9" />
+        <Key codes="1609" keyLabel="ى" keyWidth="9" />
+        <Key codes="1577" keyLabel="ة" keyWidth="9" />
+        <Key codes="1608" keyLabel="و" keyWidth="9" />
+        <Key codes="1586" keyLabel="ز" keyWidth="9" />
+        <Key codes="-5"  keyLabel="⌫" keyWidth="13" />
+    </Row>
+    <Row>
+        <Key codes="-3"  keyLabel="123" keyWidth="12" />
+        <Key codes="-2"  keyLabel="😀" keyWidth="10" />
+        <Key codes="-10" keyLabel="🌐" keyWidth="10" />
+        <Key codes="32"  keyLabel="space" keyWidth="22" />
+        <Key codes="-11" keyLabel="🎤" keyWidth="10" />
+        <Key codes="-13" keyLabel="✨" keyWidth="10" />
+        <Key codes="46"  keyLabel="." popupCharacters="،:؛!؟" keyWidth="10" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="16" />
+    </Row>
+</Keyboard>

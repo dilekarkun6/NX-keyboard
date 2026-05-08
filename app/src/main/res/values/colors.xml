@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="key_background">#FFFFFF</color>
+    <color name="key_text">#212121</color>
+    <color name="key_modifier_bg">#E0E0E0</color>
+    <color name="key_border">#BDBDBD</color>
+    <color name="keyboard_background">#F5F5F5</color>
+    <color name="key_pressed">#BBDEFB</color>
+    <color name="accent">#1976D2</color>
+    <color name="enter_key_bg">#1976D2</color>
+    <color name="enter_key_text">#FFFFFF</color>
+
+    <color name="primary">#1976D2</color>
+    <color name="primary_dark">#0D47A1</color>
+    <color name="ic_launcher_background">#0A0A1F</color>
+</resources>

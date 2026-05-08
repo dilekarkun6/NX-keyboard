@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/cat_setup">
+        <Preference
+            app:key="enable_keyboard"
+            app:title="@string/enable_keyboard_title"
+            app:summary="@string/enable_keyboard_summary" />
+        <Preference
+            app:key="choose_keyboard"
+            app:title="@string/choose_keyboard_title"
+            app:summary="@string/choose_keyboard_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_general">
+        <ListPreference
+            app:key="theme"
+            app:title="@string/theme_title"
+            app:summary="@string/theme_summary"
+            app:entries="@array/theme_entries"
+            app:entryValues="@array/theme_values"
+            app:defaultValue="system" />
+        <SwitchPreferenceCompat
+            app:key="haptic_feedback"
+            app:title="@string/haptic_title"
+            app:summary="@string/haptic_summary"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="sound_feedback"
+            app:title="@string/sound_title"
+            app:summary="@string/sound_summary"
+            app:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_languages">
+        <MultiSelectListPreference
+            app:key="enabled_languages"
+            app:title="@string/languages_title"
+            app:summary="@string/languages_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_emoji">
+        <Preference
+            app:key="clear_recent_emojis"
+            app:title="@string/clear_recent_emojis_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_clipboard">
+        <Preference
+            app:key="clear_clipboard_history"
+            app:title="@string/clear_clipboard_history_title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_voice">
+        <SwitchPreferenceCompat
+            app:key="voice_online"
+            app:title="@string/voice_online_title"
+            app:summary="@string/voice_online_summary"
+            app:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_ai">
+        <SwitchPreferenceCompat
+            app:key="ai_enabled"
+            app:title="@string/ai_enabled_title"
+            app:summary="@string/ai_enabled_summary"
+            app:defaultValue="false" />
+        <ListPreference
+            app:key="ai_model"
+            app:title="@string/ai_model_title"
+            app:entries="@array/ai_model_entries"
+            app:entryValues="@array/ai_model_values"
+            app:defaultValue="meta-llama/llama-3.3-70b-instruct:free" />
+        <ListPreference
+            app:key="ai_target_lang"
+            app:title="@string/ai_target_lang_title"
+            app:entries="@array/ai_target_lang_entries"
+            app:entryValues="@array/ai_target_lang_values"
+            app:defaultValue="English" />
+        <Preference
+            app:key="ai_status"
+            app:title="@string/ai_status_title" />
+        <EditTextPreference
+            app:key="ai_user_key"
+            app:title="@string/ai_user_key_title"
+            app:summary="@string/ai_user_key_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/cat_about">
+        <Preference
+            app:key="about_version"
+            app:title="@string/about_version_title" />
+        <Preference
+            app:key="about_license"
+            app:title="@string/about_license_title"
+            app:summary="@string/about_license_summary" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android">
+    <Row>
+        <Key codes="1081" keyLabel="й" popupCharacters="1" keyWidth="9" />
+        <Key codes="1094" keyLabel="ц" popupCharacters="2" keyWidth="9" />
+        <Key codes="1091" keyLabel="у" popupCharacters="3" keyWidth="9" />
+        <Key codes="1082" keyLabel="к" popupCharacters="4" keyWidth="9" />
+        <Key codes="1077" keyLabel="е" popupCharacters="5ё" keyWidth="9" />
+        <Key codes="1085" keyLabel="н" popupCharacters="6" keyWidth="9" />
+        <Key codes="1075" keyLabel="г" popupCharacters="7" keyWidth="9" />
+        <Key codes="1096" keyLabel="ш" popupCharacters="8щ" keyWidth="9" />
+        <Key codes="1097" keyLabel="щ" popupCharacters="9" keyWidth="9" />
+        <Key codes="1079" keyLabel="з" popupCharacters="0" keyWidth="9" />
+        <Key codes="1093" keyLabel="х" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="1092" keyLabel="ф" keyWidth="9" />
+        <Key codes="1099" keyLabel="ы" keyWidth="9" />
+        <Key codes="1074" keyLabel="в" keyWidth="9" />
+        <Key codes="1072" keyLabel="а" keyWidth="9" />
+        <Key codes="1087" keyLabel="п" keyWidth="9" />
+        <Key codes="1088" keyLabel="р" keyWidth="9" />
+        <Key codes="1086" keyLabel="о" keyWidth="9" />
+        <Key codes="1083" keyLabel="л" keyWidth="9" />
+        <Key codes="1076" keyLabel="д" keyWidth="9" />
+        <Key codes="1078" keyLabel="ж" keyWidth="9" />
+        <Key codes="1101" keyLabel="э" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="-1"  keyLabel="⇧" keyWidth="13" />
+        <Key codes="1103" keyLabel="я" keyWidth="9" />
+        <Key codes="1095" keyLabel="ч" keyWidth="9" />
+        <Key codes="1089" keyLabel="с" keyWidth="9" />
+        <Key codes="1084" keyLabel="м" keyWidth="9" />
+        <Key codes="1080" keyLabel="и" popupCharacters="ї" keyWidth="9" />
+        <Key codes="1090" keyLabel="т" keyWidth="9" />
+        <Key codes="1100" keyLabel="ь" keyWidth="9" />
+        <Key codes="1073" keyLabel="б" keyWidth="9" />
+        <Key codes="1102" keyLabel="ю" keyWidth="9" />
+        <Key codes="-5"  keyLabel="⌫" keyWidth="13" />
+    </Row>
+    <Row>
+        <Key codes="-3"  keyLabel="123" keyWidth="12" />
+        <Key codes="-2"  keyLabel="😀" keyWidth="10" />
+        <Key codes="-10" keyLabel="🌐" keyWidth="10" />
+        <Key codes="32"  keyLabel="space" keyWidth="22" />
+        <Key codes="-11" keyLabel="🎤" keyWidth="10" />
+        <Key codes="-13" keyLabel="✨" keyWidth="10" />
+        <Key codes="46"  keyLabel="." popupCharacters=",:;!?" keyWidth="10" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="16" />
+    </Row>
+</Keyboard>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NX Klavye</string>
+    <string name="settings_title">NX Klavye Ayarları</string>
+
+    <string name="cat_setup">Kurulum</string>
+    <string name="enable_keyboard_title">NX Klavyeyi etkinleştir</string>
+    <string name="enable_keyboard_summary">Sistem klavye listesini aç</string>
+    <string name="choose_keyboard_title">Klavye seç</string>
+    <string name="choose_keyboard_summary">Klavye değiştiriciyi aç</string>
+
+    <string name="cat_general">Genel</string>
+    <string name="theme_title">Tema</string>
+    <string name="theme_summary">Açık, Koyu ya da Sistem ayarına uy</string>
+    <string name="haptic_title">Titreşim geri bildirimi</string>
+    <string name="haptic_summary">Tuşa basıldığında titret</string>
+    <string name="sound_title">Ses geri bildirimi</string>
+    <string name="sound_summary">Tuşa basıldığında ses çal</string>
+
+    <string name="cat_languages">Diller</string>
+    <string name="languages_title">Etkin diller</string>
+    <string name="languages_summary">Hangi klavye dilleri etkin olsun</string>
+
+    <string name="cat_emoji">Emoji</string>
+    <string name="clear_recent_emojis_title">Son kullanılan emojileri temizle</string>
+
+    <string name="cat_clipboard">Pano</string>
+    <string name="clear_clipboard_history_title">Pano geçmişini temizle</string>
+
+    <string name="cat_voice">Sesli yazma</string>
+    <string name="voice_online_title">Çevrimiçi tanıma</string>
+    <string name="voice_online_summary">Google çevrimiçi sesli tanıma kullan</string>
+
+    <string name="cat_ai">AI (OpenRouter)</string>
+    <string name="ai_enabled_title">AI özelliklerini aç</string>
+    <string name="ai_enabled_summary">OpenRouter ile çeviri ve düzeltme</string>
+    <string name="ai_model_title">Model</string>
+    <string name="ai_target_lang_title">Varsayılan çeviri dili</string>
+    <string name="ai_status_title">API anahtarı durumu</string>
+    <string name="ai_built_in_key_active">Yerleşik API anahtarı aktif</string>
+    <string name="ai_built_in_key_missing">Yerleşik anahtar yok. Aşağıdan kendi anahtarını ekle.</string>
+    <string name="ai_user_key_title">API anahtarını değiştir (isteğe bağlı)</string>
+    <string name="ai_user_key_summary">Boş bırakınca yerleşik anahtar kullanılır</string>
+
+    <string name="cat_about">Hakkında</string>
+    <string name="about_version_title">Sürüm</string>
+    <string name="about_version_summary">NX Klavye %1$s</string>
+    <string name="about_license_title">Lisans</string>
+    <string name="about_license_summary">GNU AGPLv3</string>
+    <string name="about_github_title">GitHub</string>
+</resources>

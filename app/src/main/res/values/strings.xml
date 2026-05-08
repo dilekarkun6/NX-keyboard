@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NX Keyboard</string>
+    <string name="settings_title">NX Keyboard Settings</string>
+
+    <string name="cat_setup">Setup</string>
+    <string name="enable_keyboard_title">Enable NX Keyboard</string>
+    <string name="enable_keyboard_summary">Open system keyboard list</string>
+    <string name="choose_keyboard_title">Choose Keyboard</string>
+    <string name="choose_keyboard_summary">Open keyboard switcher</string>
+
+    <string name="cat_general">General</string>
+    <string name="theme_title">Theme</string>
+    <string name="theme_summary">Light, Dark or follow system</string>
+    <string name="haptic_title">Haptic feedback</string>
+    <string name="haptic_summary">Vibrate on key press</string>
+    <string name="sound_title">Sound feedback</string>
+    <string name="sound_summary">Play sound on key press</string>
+
+    <string name="cat_languages">Languages</string>
+    <string name="languages_title">Enabled languages</string>
+    <string name="languages_summary">Choose which keyboard languages are active</string>
+
+    <string name="cat_emoji">Emoji</string>
+    <string name="clear_recent_emojis_title">Clear recent emojis</string>
+
+    <string name="cat_clipboard">Clipboard</string>
+    <string name="clear_clipboard_history_title">Clear clipboard history</string>
+
+    <string name="cat_voice">Voice input</string>
+    <string name="voice_online_title">Online recognition</string>
+    <string name="voice_online_summary">Use Google online speech recognition</string>
+
+    <string name="cat_ai">AI (OpenRouter)</string>
+    <string name="ai_enabled_title">Enable AI features</string>
+    <string name="ai_enabled_summary">Translate and correct text via OpenRouter</string>
+    <string name="ai_model_title">Model</string>
+    <string name="ai_target_lang_title">Default translation target</string>
+    <string name="ai_status_title">API key status</string>
+    <string name="ai_built_in_key_active">Built-in API key active</string>
+    <string name="ai_built_in_key_missing">No built-in key. Add your own below.</string>
+    <string name="ai_user_key_title">Override API key (optional)</string>
+    <string name="ai_user_key_summary">Leave empty to use built-in key</string>
+
+    <string name="cat_about">About</string>
+    <string name="about_version_title">Version</string>
+    <string name="about_version_summary">NX Keyboard %1$s</string>
+    <string name="about_license_title">License</string>
+    <string name="about_license_summary">GNU AGPLv3</string>
+    <string name="about_github_title">GitHub</string>
+</resources>

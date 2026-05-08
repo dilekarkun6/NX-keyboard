@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="theme_entries">
+        <item>Açık</item>
+        <item>Koyu</item>
+        <item>Sistem</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>system</item>
+    </string-array>
+
+    <string-array name="ai_model_entries">
+        <item>Llama 3.3 70B (Meta)</item>
+        <item>DeepSeek R1 (MIT)</item>
+        <item>Qwen3 235B (Apache 2.0)</item>
+        <item>Mistral 7B (Apache 2.0)</item>
+        <item>Llama 3.1 8B (Meta)</item>
+    </string-array>
+    <string-array name="ai_model_values">
+        <item>meta-llama/llama-3.3-70b-instruct:free</item>
+        <item>deepseek/deepseek-r1:free</item>
+        <item>qwen/qwen3-235b-a22b:free</item>
+        <item>mistralai/mistral-7b-instruct:free</item>
+        <item>meta-llama/llama-3.1-8b-instruct:free</item>
+    </string-array>
+
+    <string-array name="ai_target_lang_entries">
+        <item>İngilizce</item>
+        <item>Türkçe</item>
+        <item>Almanca</item>
+        <item>Fransızca</item>
+        <item>İspanyolca</item>
+        <item>Rusça</item>
+        <item>Arapça</item>
+        <item>Japonca</item>
+    </string-array>
+    <string-array name="ai_target_lang_values">
+        <item>English</item>
+        <item>Turkish</item>
+        <item>German</item>
+        <item>French</item>
+        <item>Spanish</item>
+        <item>Russian</item>
+        <item>Arabic</item>
+        <item>Japanese</item>
+    </string-array>
+</resources>

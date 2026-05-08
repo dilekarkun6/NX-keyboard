@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android">
+    <Row>
+        <Key codes="49"  keyLabel="1" keyWidth="10" />
+        <Key codes="50"  keyLabel="2" keyWidth="10" />
+        <Key codes="51"  keyLabel="3" keyWidth="10" />
+        <Key codes="52"  keyLabel="4" keyWidth="10" />
+        <Key codes="53"  keyLabel="5" keyWidth="10" />
+        <Key codes="54"  keyLabel="6" keyWidth="10" />
+        <Key codes="55"  keyLabel="7" keyWidth="10" />
+        <Key codes="56"  keyLabel="8" keyWidth="10" />
+        <Key codes="57"  keyLabel="9" keyWidth="10" />
+        <Key codes="48"  keyLabel="0" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="64"  keyLabel="@" keyWidth="10" />
+        <Key codes="35"  keyLabel="#" keyWidth="10" />
+        <Key codes="36"  keyLabel="$" keyWidth="10" />
+        <Key codes="95"  keyLabel="_" keyWidth="10" />
+        <Key codes="38"  keyLabel="&amp;" keyWidth="10" />
+        <Key codes="45"  keyLabel="-" keyWidth="10" />
+        <Key codes="43"  keyLabel="+" keyWidth="10" />
+        <Key codes="40"  keyLabel="(" keyWidth="10" />
+        <Key codes="41"  keyLabel=")" keyWidth="10" />
+        <Key codes="47"  keyLabel="/" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="-1"  keyLabel="⇧" keyWidth="15" />
+        <Key codes="42"  keyLabel="*" keyWidth="9" />
+        <Key codes="34"  keyLabel="&quot;" keyWidth="9" />
+        <Key codes="39"  keyLabel="&apos;" keyWidth="9" />
+        <Key codes="58"  keyLabel=":" keyWidth="9" />
+        <Key codes="59"  keyLabel=";" keyWidth="9" />
+        <Key codes="33"  keyLabel="!" keyWidth="9" />
+        <Key codes="63"  keyLabel="?" keyWidth="9" />
+        <Key codes="37"  keyLabel="%" keyWidth="9" />
+        <Key codes="-5"  keyLabel="⌫" keyWidth="15" />
+    </Row>
+    <Row>
+        <Key codes="-4"  keyLabel="ABC" keyWidth="14" />
+        <Key codes="44"  keyLabel="," keyWidth="10" />
+        <Key codes="-2"  keyLabel="😀" keyWidth="10" />
+        <Key codes="32"  keyLabel="space" keyWidth="30" />
+        <Key codes="-11" keyLabel="🎤" keyWidth="10" />
+        <Key codes="46"  keyLabel="." keyWidth="10" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="16" />
+    </Row>
+</Keyboard>
