@@ -41,7 +41,7 @@
         <Key codes="-2"  keyLabel="😀" keyWidth="11" />
         <Key codes="-10" keyLabel="🌐" keyWidth="11" />
         <Key codes="32"  keyLabel="space" keyWidth="32" />
-        <Key codes="44"  keyLabel="," popupCharacters="-_'\"" keyWidth="10" />
+        <Key codes="44"  keyLabel="," popupCharacters="-_&apos;&quot;" keyWidth="10" />
         <Key codes="12290"  keyLabel="。" popupCharacters="、,.:;" keyWidth="10" />
         <Key codes="10"  keyLabel="⏎" keyWidth="12" />
     </Row>
