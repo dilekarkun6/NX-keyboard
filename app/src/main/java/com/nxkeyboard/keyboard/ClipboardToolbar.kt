@@ -100,19 +100,27 @@ class ClipboardToolbar @JvmOverloads constructor(
     }
 
     private fun buildActionButtons() {
+        val showTranslate = com.nxkeyboard.utils.PrefsHelper.getBoolean(context, "show_translate_button", false)
+        val showAi = com.nxkeyboard.utils.PrefsHelper.getBoolean(context, "show_ai_button", true)
         addAction("✂") { callback?.onCut() }
         addAction("📋") { callback?.onCopy() }
         addAction("📥") { callback?.onPaste() }
         addAction("🅰") { callback?.onSelectAll() }
         addAction("◀") { callback?.onCursorLeft() }
         addAction("▶") { callback?.onCursorRight() }
-        addAction("✨") { callback?.onAiCorrect() }
-        addAction("🌍") { callback?.onAiTranslate() }
+        if (showAi) addAction("✨") { callback?.onAiCorrect() }
+        if (showTranslate) addAction("🌍") { callback?.onAiTranslate() }
         addAction("🗑") {
             callback?.onClearHistory()
             refreshHistory()
         }
         addAction("✕") { callback?.onClose() }
+    }
+
+    fun rebuildActions() {
+        actionRow.removeAllViews()
+        buildActionButtons()
+        applyTheme()
     }
 
     private fun addAction(label: String, onClick: () -> Unit) {

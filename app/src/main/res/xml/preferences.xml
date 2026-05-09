@@ -26,11 +26,42 @@
             app:title="@string/haptic_title"
             app:summary="@string/haptic_summary"
             app:defaultValue="true" />
+        <ListPreference
+            app:key="key_sound"
+            app:title="Tuş sesi"
+            app:summary="Tuşa basıldığında çalınan ses"
+            app:entries="@array/key_sound_entries"
+            app:entryValues="@array/key_sound_values"
+            app:defaultValue="off" />
+        <ListPreference
+            app:key="keyboard_height"
+            app:title="Klavye boyutu"
+            app:summary="Tuşların yüksekliği"
+            app:entries="@array/keyboard_height_entries"
+            app:entryValues="@array/keyboard_height_values"
+            app:defaultValue="1.15" />
         <SwitchPreferenceCompat
-            app:key="sound_feedback"
-            app:title="@string/sound_title"
-            app:summary="@string/sound_summary"
+            app:key="double_space_period"
+            app:title="Çift boşlukla nokta"
+            app:summary="İki kez boşluk basıldığında otomatik olarak nokta + boşluk yazsın"
             app:defaultValue="false" />
+        <SwitchPreferenceCompat
+            app:key="show_translate_button"
+            app:title="Çeviri butonunu göster"
+            app:summary="Pano araç çubuğunda 🌍 çeviri butonunu göster"
+            app:defaultValue="false" />
+        <SwitchPreferenceCompat
+            app:key="show_ai_button"
+            app:title="AI düzeltme butonunu göster"
+            app:summary="Klavyede ve araç çubuğunda ✨ AI butonunu göster"
+            app:defaultValue="true" />
+        <Preference
+            app:key="keyboard_background"
+            app:title="Klavye arkaplan resmi"
+            app:summary="Resim seçmek için dokunun" />
+        <Preference
+            app:key="clear_keyboard_background"
+            app:title="Arkaplan resmini temizle" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/cat_languages">
@@ -65,13 +96,13 @@
             app:key="ai_enabled"
             app:title="@string/ai_enabled_title"
             app:summary="@string/ai_enabled_summary"
-            app:defaultValue="false" />
+            app:defaultValue="true" />
         <ListPreference
             app:key="ai_model"
             app:title="@string/ai_model_title"
             app:entries="@array/ai_model_entries"
             app:entryValues="@array/ai_model_values"
-            app:defaultValue="meta-llama/llama-3.3-70b-instruct:free" />
+            app:defaultValue="openrouter/free" />
         <ListPreference
             app:key="ai_target_lang"
             app:title="@string/ai_target_lang_title"

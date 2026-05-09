@@ -144,15 +144,17 @@ class NXInputMethodService : InputMethodService() {
 
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
         super.onStartInputView(info, restarting)
+        languageManager.loadFromPrefs()
         if (::keyboardView.isInitialized) {
             keyboardView.applyTheme()
+            keyboardView.applySettings()
             keyboardView.reloadLayout()
         }
         if (::emojiKeyboardView.isInitialized) {
             emojiKeyboardView.applyTheme()
         }
         if (::clipboardToolbar.isInitialized) {
-            clipboardToolbar.applyTheme()
+            clipboardToolbar.rebuildActions()
         }
     }
 

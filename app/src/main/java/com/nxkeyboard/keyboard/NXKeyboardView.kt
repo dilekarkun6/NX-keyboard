@@ -1,11 +1,16 @@
 package com.nxkeyboard.keyboard
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.media.AudioManager
+import android.media.SoundPool
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
@@ -18,6 +23,7 @@ import com.nxkeyboard.language.LanguageManager
 import com.nxkeyboard.service.NXInputMethodService
 import com.nxkeyboard.theme.ThemeManager
 import com.nxkeyboard.utils.HapticHelper
+import com.nxkeyboard.utils.PrefsHelper
 
 class NXKeyboardView @JvmOverloads constructor(
     context: Context,
@@ -35,6 +41,13 @@ class NXKeyboardView @JvmOverloads constructor(
     private var rowHeight: Float = dp(56f)
     private val keyPadding: Float = dp(2f)
     private val cornerRadius: Float = dp(6f)
+
+    private var backgroundBitmap: Bitmap? = null
+    private val backgroundDestRect = RectF()
+    private val backgroundOverlayPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var soundPool: SoundPool? = null
+    private var audioManager: AudioManager? = null
+    private var soundMode: String = "off"
 
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val keyPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -68,12 +81,67 @@ class NXKeyboardView @JvmOverloads constructor(
         this.languageManager = service.getLanguageManager()
         this.themeManager = service.getThemeManager()
         applyTheme()
+        applySettings()
         reloadLayout()
     }
 
     fun setEditorInfo(info: EditorInfo?) {
         this.lastEditorInfo = info
         invalidate()
+    }
+
+    fun applySettings() {
+        val ctx = context
+        val scaleStr = PrefsHelper.getString(ctx, "keyboard_height", "1.15")
+        val scale = scaleStr.toFloatOrNull() ?: 1.15f
+        rowHeight = dp(56f) * scale.coerceIn(0.7f, 1.6f)
+        loadBackgroundImage()
+        soundMode = PrefsHelper.getString(ctx, "key_sound", "off")
+        if (soundMode != "off" && soundPool == null) {
+            initSoundPool()
+        }
+        requestLayout()
+        invalidate()
+    }
+
+    private fun loadBackgroundImage() {
+        backgroundBitmap?.recycle()
+        backgroundBitmap = null
+        val uriString = PrefsHelper.getString(context, "keyboard_background_uri", "")
+        if (uriString.isBlank()) return
+        try {
+            val uri = Uri.parse(uriString)
+            context.contentResolver.openInputStream(uri)?.use { stream ->
+                val options = BitmapFactory.Options().apply { inSampleSize = 2 }
+                backgroundBitmap = BitmapFactory.decodeStream(stream, null, options)
+            }
+        } catch (_: Throwable) {
+            backgroundBitmap = null
+        }
+    }
+
+    private fun initSoundPool() {
+        try {
+            soundPool = SoundPool.Builder()
+                .setMaxStreams(4)
+                .build()
+            audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        } catch (_: Throwable) {}
+    }
+
+    private fun playKeySound() {
+        when (soundMode) {
+            "off" -> return
+            "system" -> {
+                audioManager?.playSoundEffect(AudioManager.FX_KEY_CLICK, 0.3f)
+            }
+            "tone" -> {
+                audioManager?.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, 0.4f)
+            }
+            "spacebar" -> {
+                audioManager?.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR, 0.5f)
+            }
+        }
     }
 
     fun reloadLayout() {
@@ -162,6 +230,16 @@ class NXKeyboardView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawPaint(backgroundPaint)
+        backgroundBitmap?.let { bmp ->
+            backgroundDestRect.set(0f, 0f, width.toFloat(), height.toFloat())
+            canvas.drawBitmap(bmp, null, backgroundDestRect, null)
+            val dark = themeManager?.isDarkActive() ?: false
+            backgroundOverlayPaint.color = if (dark)
+                Color.argb(140, 0, 0, 0)
+            else
+                Color.argb(90, 255, 255, 255)
+            canvas.drawRect(backgroundDestRect, backgroundOverlayPaint)
+        }
         for (kr in keyRects) {
             drawKey(canvas, kr)
         }
@@ -273,6 +351,7 @@ class NXKeyboardView @JvmOverloads constructor(
 
     private fun handleKeyClick(key: Key) {
         val service = imeService ?: return
+        playKeySound()
         when (key.code) {
             KeyboardLayoutManager.CODE_SHIFT -> handleShift()
             KeyboardLayoutManager.CODE_BACKSPACE -> service.sendBackspace()
@@ -320,8 +399,9 @@ class NXKeyboardView @JvmOverloads constructor(
     }
 
     private fun handleSpace(service: NXInputMethodService) {
+        val doubleSpaceEnabled = PrefsHelper.getBoolean(context, "double_space_period", false)
         val now = System.currentTimeMillis()
-        if (now - lastSpaceClickTime < 300) {
+        if (doubleSpaceEnabled && now - lastSpaceClickTime < 300) {
             service.replaceLastWith(". ")
             lastSpaceClickTime = 0L
         } else {

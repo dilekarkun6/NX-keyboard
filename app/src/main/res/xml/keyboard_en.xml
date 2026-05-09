@@ -36,13 +36,14 @@
         <Key codes="-5"  keyLabel="⌫" keyWidth="15" />
     </Row>
     <Row>
-        <Key codes="-3"  keyLabel="123" keyWidth="12" />
+        <Key codes="-3"  keyLabel="123" keyWidth="11" />
         <Key codes="-2"  keyLabel="😀" keyWidth="10" />
+        <Key codes="-12" keyLabel="📋" keyWidth="10" />
         <Key codes="-10" keyLabel="🌐" keyWidth="10" />
         <Key codes="32"  keyLabel="space" keyWidth="22" />
-        <Key codes="-11" keyLabel="🎤" keyWidth="10" />
-        <Key codes="-13" keyLabel="✨" keyWidth="10" />
-        <Key codes="46"  keyLabel="." popupCharacters=",:;!?" keyWidth="10" />
-        <Key codes="10"  keyLabel="⏎" keyWidth="16" />
+        <Key codes="-11" keyLabel="🎤" keyWidth="9" />
+        <Key codes="-13" keyLabel="✨" keyWidth="9" />
+        <Key codes="46"  keyLabel="." popupCharacters=",:;!?" keyWidth="9" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="10" />
     </Row>
 </Keyboard>

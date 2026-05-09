@@ -12,18 +12,22 @@
     </string-array>
 
     <string-array name="ai_model_entries">
-        <item>Llama 3.3 70B (Meta)</item>
-        <item>DeepSeek R1 (MIT)</item>
-        <item>Qwen3 235B (Apache 2.0)</item>
-        <item>Mistral 7B (Apache 2.0)</item>
-        <item>Llama 3.1 8B (Meta)</item>
+        <item>Otomatik (Önerilen — Free Router)</item>
+        <item>DeepSeek V3</item>
+        <item>DeepSeek R1</item>
+        <item>Qwen3 Coder 480B</item>
+        <item>Llama 3.3 70B</item>
+        <item>Gemini 2.0 Flash</item>
+        <item>Mistral Small 3.1 24B</item>
     </string-array>
     <string-array name="ai_model_values">
-        <item>meta-llama/llama-3.3-70b-instruct:free</item>
+        <item>openrouter/free</item>
+        <item>deepseek/deepseek-chat-v3-0324:free</item>
         <item>deepseek/deepseek-r1:free</item>
-        <item>qwen/qwen3-235b-a22b:free</item>
-        <item>mistralai/mistral-7b-instruct:free</item>
-        <item>meta-llama/llama-3.1-8b-instruct:free</item>
+        <item>qwen/qwen3-coder:free</item>
+        <item>meta-llama/llama-3.3-70b-instruct:free</item>
+        <item>google/gemini-2.0-flash-exp:free</item>
+        <item>mistralai/mistral-small-3.1-24b-instruct:free</item>
     </string-array>
 
     <string-array name="ai_target_lang_entries">
@@ -45,5 +49,31 @@
         <item>Russian</item>
         <item>Arabic</item>
         <item>Japanese</item>
+    </string-array>
+
+    <string-array name="keyboard_height_entries">
+        <item>Küçük</item>
+        <item>Normal</item>
+        <item>Büyük</item>
+        <item>Çok Büyük</item>
+    </string-array>
+    <string-array name="keyboard_height_values">
+        <item>0.85</item>
+        <item>1.0</item>
+        <item>1.15</item>
+        <item>1.3</item>
+    </string-array>
+
+    <string-array name="key_sound_entries">
+        <item>Kapalı</item>
+        <item>Sistem Tıklaması</item>
+        <item>Ton Sesi</item>
+        <item>Uzay Tuş Sesi</item>
+    </string-array>
+    <string-array name="key_sound_values">
+        <item>off</item>
+        <item>system</item>
+        <item>tone</item>
+        <item>spacebar</item>
     </string-array>
 </resources>

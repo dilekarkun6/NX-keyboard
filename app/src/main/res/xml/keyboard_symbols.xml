@@ -37,12 +37,12 @@
         <Key codes="-5"  keyLabel="⌫" keyWidth="15" />
     </Row>
     <Row>
-        <Key codes="-4"  keyLabel="ABC" keyWidth="14" />
+        <Key codes="-4"  keyLabel="ABC" keyWidth="12" />
+        <Key codes="-12" keyLabel="📋" keyWidth="10" />
         <Key codes="44"  keyLabel="," keyWidth="10" />
-        <Key codes="-2"  keyLabel="😀" keyWidth="10" />
         <Key codes="32"  keyLabel="space" keyWidth="30" />
-        <Key codes="-11" keyLabel="🎤" keyWidth="10" />
-        <Key codes="46"  keyLabel="." keyWidth="10" />
-        <Key codes="10"  keyLabel="⏎" keyWidth="16" />
+        <Key codes="-11" keyLabel="🎤" keyWidth="9" />
+        <Key codes="46"  keyLabel="." keyWidth="9" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="20" />
     </Row>
 </Keyboard>

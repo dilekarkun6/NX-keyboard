@@ -15,35 +15,52 @@ import java.util.concurrent.TimeUnit
 class AIManager(private val context: Context) {
 
     enum class Model(val id: String, val displayName: String) {
-        LLAMA_70B(
-            "meta-llama/llama-3.3-70b-instruct:free",
-            "Llama 3.3 70B (Meta — Free)"
+        AUTO_FREE(
+            "openrouter/free",
+            "Auto (Free Router — Recommended)"
+        ),
+        DEEPSEEK_V3(
+            "deepseek/deepseek-chat-v3-0324:free",
+            "DeepSeek V3 (Free)"
         ),
         DEEPSEEK_R1(
             "deepseek/deepseek-r1:free",
-            "DeepSeek R1 (MIT — Free)"
+            "DeepSeek R1 (Free)"
         ),
-        QWEN3_235B(
-            "qwen/qwen3-235b-a22b:free",
-            "Qwen3 235B (Apache 2.0 — Free)"
+        QWEN3_CODER(
+            "qwen/qwen3-coder:free",
+            "Qwen3 Coder 480B (Free)"
         ),
-        MISTRAL_7B(
-            "mistralai/mistral-7b-instruct:free",
-            "Mistral 7B (Apache 2.0 — Free)"
+        LLAMA_70B(
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "Llama 3.3 70B (Free)"
         ),
-        LLAMA_8B(
-            "meta-llama/llama-3.1-8b-instruct:free",
-            "Llama 3.1 8B (Meta — Free)"
+        GEMINI_FLASH(
+            "google/gemini-2.0-flash-exp:free",
+            "Gemini 2.0 Flash (Free)"
+        ),
+        MISTRAL_SMALL(
+            "mistralai/mistral-small-3.1-24b-instruct:free",
+            "Mistral Small 3.1 24B (Free)"
         );
 
         companion object {
-            fun fromId(id: String): Model = entries.firstOrNull { it.id == id } ?: LLAMA_70B
+            fun fromId(id: String): Model = entries.firstOrNull { it.id == id } ?: AUTO_FREE
         }
     }
 
     companion object {
         const val BASE_URL = "https://openrouter.ai/api/v1"
-        const val DEFAULT_MODEL = "meta-llama/llama-3.3-70b-instruct:free"
+        const val DEFAULT_MODEL = "openrouter/free"
+
+        private val FALLBACK_CHAIN = listOf(
+            "openrouter/free",
+            "deepseek/deepseek-chat-v3-0324:free",
+            "deepseek/deepseek-r1:free",
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "google/gemini-2.0-flash-exp:free",
+            "mistralai/mistral-small-3.1-24b-instruct:free"
+        )
     }
 
     private val client: OkHttpClient = OkHttpClient.Builder()
@@ -52,11 +69,14 @@ class AIManager(private val context: Context) {
         .writeTimeout(15, TimeUnit.SECONDS)
         .build()
 
+    @Volatile
+    private var cachedFreeModels: List<String>? = null
+
     suspend fun translate(text: String, targetLanguage: String): Result<String> = withContext(Dispatchers.IO) {
         if (text.isBlank()) return@withContext Result.failure(IllegalArgumentException("Empty text"))
         val prompt = "Translate the following text to $targetLanguage. " +
             "Output ONLY the translation without any explanation, quotes, or extra commentary.\n\n$text"
-        callAI(prompt)
+        callAIWithFallback(prompt)
     }
 
     suspend fun correct(text: String, language: String): Result<String> = withContext(Dispatchers.IO) {
@@ -66,15 +86,49 @@ class AIManager(private val context: Context) {
             "words are mispronounced or written incorrectly. Then output ONLY the corrected, natural " +
             "version of the text, with proper grammar, spelling, and punctuation. Do not add any " +
             "explanation, quotes, or commentary.\n\n$text"
-        callAI(prompt)
+        callAIWithFallback(prompt)
     }
 
-    private fun callAI(prompt: String): Result<String> {
-        return try {
-            val apiKey = resolveApiKey() ?: return Result.failure(IllegalStateException("API key unavailable"))
-            val prefs = PrefsHelper.get(context)
-            val modelId = prefs.getString("ai_model", DEFAULT_MODEL) ?: DEFAULT_MODEL
+    private fun callAIWithFallback(prompt: String): Result<String> {
+        val apiKey = resolveApiKey() ?: return Result.failure(IllegalStateException("API key unavailable"))
+        val prefs = PrefsHelper.get(context)
+        val preferredId = prefs.getString("ai_model", DEFAULT_MODEL) ?: DEFAULT_MODEL
 
+        val tried = mutableSetOf<String>()
+        val attemptOrder = buildList {
+            add(preferredId)
+            for (m in FALLBACK_CHAIN) if (m !in this) add(m)
+            cachedFreeModels?.let { dynamic ->
+                for (m in dynamic) if (m !in this) add(m)
+            }
+        }
+
+        var lastError: Throwable = RuntimeException("No model attempted")
+
+        for (modelId in attemptOrder) {
+            if (modelId in tried) continue
+            tried += modelId
+            val attempt = callAIOnce(apiKey, modelId, prompt)
+            attempt.onSuccess { return Result.success(it) }
+            attempt.onFailure { err ->
+                lastError = err
+                val msg = err.message.orEmpty()
+                val is404 = "HTTP 404" in msg || "No endpoints found" in msg
+                val is400 = "HTTP 400" in msg
+                val is429 = "HTTP 429" in msg
+                if (is404 && cachedFreeModels == null) {
+                    cachedFreeModels = fetchFreeModels(apiKey)
+                }
+                if (!is404 && !is400 && !is429) {
+                    return Result.failure(err)
+                }
+            }
+        }
+        return Result.failure(lastError)
+    }
+
+    private fun callAIOnce(apiKey: String, modelId: String, prompt: String): Result<String> {
+        return try {
             val payload = JSONObject().apply {
                 put("model", modelId)
                 put("max_tokens", 512)
@@ -89,7 +143,7 @@ class AIManager(private val context: Context) {
                 .url("$BASE_URL/chat/completions")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer $apiKey")
-                .addHeader("HTTP-Referer", "https://github.com/nxkeyboard")
+                .addHeader("HTTP-Referer", "https://github.com/dilekarkun6/NX-keyboard")
                 .addHeader("X-Title", "NX Keyboard")
                 .post(payload.toRequestBody("application/json".toMediaType()))
                 .build()
@@ -100,8 +154,9 @@ class AIManager(private val context: Context) {
                     return Result.failure(RuntimeException("HTTP ${response.code}: $body"))
                 }
                 val json = JSONObject(body)
-                val content = json.getJSONArray("choices")
-                    .getJSONObject(0)
+                val choices = json.optJSONArray("choices") ?: return Result.failure(RuntimeException("Empty response"))
+                if (choices.length() == 0) return Result.failure(RuntimeException("No choices"))
+                val content = choices.getJSONObject(0)
                     .getJSONObject("message")
                     .getString("content")
                     .trim()
@@ -112,15 +167,46 @@ class AIManager(private val context: Context) {
         }
     }
 
+    private fun fetchFreeModels(apiKey: String): List<String> {
+        return try {
+            val request = Request.Builder()
+                .url("$BASE_URL/models")
+                .addHeader("Authorization", "Bearer $apiKey")
+                .get()
+                .build()
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) return emptyList()
+                val body = response.body?.string().orEmpty()
+                val json = JSONObject(body)
+                val data = json.optJSONArray("data") ?: return emptyList()
+                val result = mutableListOf<String>()
+                for (i in 0 until data.length()) {
+                    val item = data.optJSONObject(i) ?: continue
+                    val id = item.optString("id")
+                    if (id.isBlank()) continue
+                    val pricing = item.optJSONObject("pricing") ?: continue
+                    val prompt = pricing.optString("prompt", "")
+                    val completion = pricing.optString("completion", "")
+                    if (prompt == "0" && completion == "0") {
+                        result += id
+                    }
+                }
+                result
+            }
+        } catch (t: Throwable) {
+            emptyList()
+        }
+    }
+
     private fun resolveApiKey(): String? {
-        val userKey = PrefsHelper.getEncrypted(context).getString("ai_api_key", "") ?: ""
+        val userKey = PrefsHelper.get(context).getString("ai_user_key", "") ?: ""
         if (userKey.isNotBlank()) return userKey
         return if (ApiKeyVault.isAvailable()) ApiKeyVault.resolve() else null
     }
 
     fun isConfigured(): Boolean {
         if (ApiKeyVault.isAvailable()) return true
-        val userKey = PrefsHelper.getEncrypted(context).getString("ai_api_key", "") ?: ""
+        val userKey = PrefsHelper.get(context).getString("ai_user_key", "") ?: ""
         return userKey.isNotBlank()
     }
 }

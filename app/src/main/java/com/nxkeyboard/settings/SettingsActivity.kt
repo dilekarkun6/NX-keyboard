@@ -1,12 +1,18 @@
 package com.nxkeyboard.settings
 
 import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.nxkeyboard.R
 import com.nxkeyboard.ai.ApiKeyVault
 import com.nxkeyboard.language.LanguageManager
@@ -14,7 +20,10 @@ import com.nxkeyboard.utils.PrefsHelper
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var themeListener: SharedPreferences.OnSharedPreferenceChangeListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         if (savedInstanceState == null) {
@@ -24,6 +33,21 @@ class SettingsActivity : AppCompatActivity() {
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.settings_title)
+
+        themeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == "theme") {
+                applyThemeFromPrefs()
+                recreate()
+            }
+        }
+        PrefsHelper.get(this).registerOnSharedPreferenceChangeListener(themeListener)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::themeListener.isInitialized) {
+            PrefsHelper.get(this).unregisterOnSharedPreferenceChangeListener(themeListener)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -31,7 +55,37 @@ class SettingsActivity : AppCompatActivity() {
         return true
     }
 
+    private fun applyThemeFromPrefs() {
+        val mode = when (PrefsHelper.getString(this, "theme", "system")) {
+            "light" -> AppCompatDelegate.MODE_NIGHT_NO
+            "dark"  -> AppCompatDelegate.MODE_NIGHT_YES
+            else    -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+        AppCompatDelegate.setDefaultNightMode(mode)
+    }
+
     class SettingsFragment : PreferenceFragmentCompat() {
+
+        private lateinit var imagePicker: ActivityResultLauncher<String>
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                if (uri != null) {
+                    val ctx = requireContext()
+                    try {
+                        ctx.contentResolver.takePersistableUriPermission(
+                            uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        )
+                    } catch (_: Throwable) {}
+                    PreferenceManager.getDefaultSharedPreferences(ctx).edit()
+                        .putString("keyboard_background_uri", uri.toString())
+                        .apply()
+                    findPreference<Preference>("keyboard_background")?.summary = "✓ Arkaplan ayarlandı"
+                }
+            }
+        }
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -50,11 +104,10 @@ class SettingsActivity : AppCompatActivity() {
 
             val languagesPref = findPreference<MultiSelectListPreference>("enabled_languages")
             languagesPref?.let { pref ->
-                val entries = LanguageManager.SUPPORTED_LOCALES
-                    .filter { it in setOf("en","tr","de","fr","es","ru","ar","ja") }
+                val entries = listOf("en", "tr", "tr_f", "de", "fr", "es", "ru", "ar", "ja")
                 pref.entries = entries.map { localeDisplayName(it) }.toTypedArray()
                 pref.entryValues = entries.toTypedArray()
-                if (pref.values.isEmpty()) pref.values = setOf("en", "tr")
+                if (pref.values.isEmpty()) pref.values = setOf("tr")
             }
 
             findPreference<Preference>("ai_status")?.let { pref ->
@@ -75,20 +128,39 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
+            findPreference<Preference>("keyboard_background")?.let { pref ->
+                val uri = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                    .getString("keyboard_background_uri", "")
+                pref.summary = if (uri.isNullOrBlank()) "Resim seçmek için dokunun" else "✓ Arkaplan ayarlandı"
+                pref.setOnPreferenceClickListener {
+                    imagePicker.launch("image/*")
+                    true
+                }
+            }
+
+            findPreference<Preference>("clear_keyboard_background")?.setOnPreferenceClickListener {
+                PreferenceManager.getDefaultSharedPreferences(requireContext()).edit()
+                    .remove("keyboard_background_uri")
+                    .apply()
+                findPreference<Preference>("keyboard_background")?.summary = "Resim seçmek için dokunun"
+                true
+            }
+
             findPreference<Preference>("about_version")?.summary =
                 getString(R.string.about_version_summary, "1.0.0")
         }
 
         private fun localeDisplayName(locale: String): String = when (locale) {
-            "tr" -> "Türkçe"
-            "en" -> "English"
-            "de" -> "Deutsch"
-            "fr" -> "Français"
-            "es" -> "Español"
-            "ru" -> "Русский"
-            "ar" -> "العربية"
-            "ja" -> "日本語"
-            else -> locale
+            "tr"   -> "Türkçe (Q)"
+            "tr_f" -> "Türkçe (F)"
+            "en"   -> "English"
+            "de"   -> "Deutsch"
+            "fr"   -> "Français"
+            "es"   -> "Español"
+            "ru"   -> "Русский"
+            "ar"   -> "العربية"
+            "ja"   -> "日本語"
+            else   -> locale
         }
     }
 }
