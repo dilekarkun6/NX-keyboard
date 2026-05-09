@@ -15,6 +15,13 @@
 
     <PreferenceCategory app:title="@string/cat_general">
         <ListPreference
+            app:key="app_language"
+            app:title="@string/app_language_title"
+            app:summary="@string/app_language_summary"
+            app:entries="@array/app_language_entries"
+            app:entryValues="@array/app_language_values"
+            app:defaultValue="system" />
+        <ListPreference
             app:key="theme"
             app:title="@string/theme_title"
             app:summary="@string/theme_summary"
@@ -40,6 +47,13 @@
             app:entries="@array/key_sound_entries"
             app:entryValues="@array/key_sound_values"
             app:defaultValue="off" />
+        <Preference
+            app:key="custom_sound"
+            app:title="@string/custom_sound_title"
+            app:summary="@string/custom_sound_summary" />
+        <Preference
+            app:key="clear_custom_sound"
+            app:title="@string/clear_custom_sound_title" />
         <ListPreference
             app:key="keyboard_height"
             app:title="@string/keyboard_height_title"

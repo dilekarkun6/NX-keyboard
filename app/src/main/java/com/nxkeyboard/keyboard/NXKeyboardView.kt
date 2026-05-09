@@ -48,6 +48,8 @@ class NXKeyboardView @JvmOverloads constructor(
     private var soundPool: SoundPool? = null
     private var audioManager: AudioManager? = null
     private var soundMode: String = "off"
+    private var customSoundId: Int = 0
+    private var customSoundReady: Boolean = false
 
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val keyPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -109,11 +111,64 @@ class NXKeyboardView @JvmOverloads constructor(
         rowHeight = dp(56f) * scale.coerceIn(0.7f, 1.6f)
         loadBackgroundImage()
         soundMode = PrefsHelper.getString(ctx, "key_sound", "off")
-        if (soundMode != "off" && soundPool == null) {
-            initSoundPool()
+        if (soundMode != "off" && audioManager == null) {
+            audioManager = ctx.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        }
+        if (soundMode == "custom") {
+            loadCustomSound()
+        } else {
+            unloadCustomSound()
         }
         requestLayout()
         invalidate()
+    }
+
+    private fun loadCustomSound() {
+        val uriString = PrefsHelper.getString(context, "custom_sound_uri", "")
+        if (uriString.isBlank()) {
+            unloadCustomSound()
+            return
+        }
+        try {
+            if (soundPool == null) {
+                val attrs = android.media.AudioAttributes.Builder()
+                    .setUsage(android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+                soundPool = SoundPool.Builder()
+                    .setMaxStreams(4)
+                    .setAudioAttributes(attrs)
+                    .build()
+            }
+            if (customSoundId != 0) {
+                soundPool?.unload(customSoundId)
+                customSoundId = 0
+            }
+            customSoundReady = false
+            val uri = Uri.parse(uriString)
+            val descriptor = context.contentResolver.openAssetFileDescriptor(uri, "r")
+            if (descriptor != null) {
+                soundPool?.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (sampleId == customSoundId && status == 0) {
+                        customSoundReady = true
+                    }
+                }
+                customSoundId = soundPool?.load(descriptor, 1) ?: 0
+                descriptor.close()
+            }
+        } catch (t: Throwable) {
+            customSoundId = 0
+            customSoundReady = false
+            com.nxkeyboard.utils.CrashLogger.logNonFatal(context, "NXKeyboardView.loadCustomSound", t)
+        }
+    }
+
+    private fun unloadCustomSound() {
+        if (customSoundId != 0) {
+            try { soundPool?.unload(customSoundId) } catch (_: Throwable) {}
+            customSoundId = 0
+            customSoundReady = false
+        }
     }
 
     private fun loadBackgroundImage() {
@@ -133,15 +188,6 @@ class NXKeyboardView @JvmOverloads constructor(
         }
     }
 
-    private fun initSoundPool() {
-        try {
-            soundPool = SoundPool.Builder()
-                .setMaxStreams(4)
-                .build()
-            audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
-        } catch (_: Throwable) {}
-    }
-
     private fun playKeySound() {
         when (soundMode) {
             "off" -> return
@@ -153,6 +199,12 @@ class NXKeyboardView @JvmOverloads constructor(
             }
             "spacebar" -> {
                 audioManager?.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR, 0.5f)
+            }
+            "custom" -> {
+                if (customSoundReady && customSoundId != 0) {
+                    val volume = PrefsHelper.getString(context, "custom_sound_volume", "0.6").toFloatOrNull() ?: 0.6f
+                    soundPool?.play(customSoundId, volume, volume, 1, 0, 1f)
+                }
             }
         }
     }

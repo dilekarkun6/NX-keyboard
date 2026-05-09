@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android">
+    <Row>
+        <Key codes="2367" keyLabel="ि" popupCharacters="1" keyWidth="9" />
+        <Key codes="2369" keyLabel="ु" popupCharacters="2" keyWidth="9" />
+        <Key codes="2375" keyLabel="े" popupCharacters="3" keyWidth="9" />
+        <Key codes="2352" keyLabel="र" popupCharacters="4" keyWidth="9" />
+        <Key codes="2340" keyLabel="त" popupCharacters="5" keyWidth="9" />
+        <Key codes="2351" keyLabel="य" popupCharacters="6" keyWidth="9" />
+        <Key codes="2369" keyLabel="ु" popupCharacters="7" keyWidth="9" />
+        <Key codes="2367" keyLabel="ि" popupCharacters="8" keyWidth="9" />
+        <Key codes="2379" keyLabel="ो" popupCharacters="9" keyWidth="9" />
+        <Key codes="2346" keyLabel="प" popupCharacters="0" keyWidth="9" />
+        <Key codes="2333" keyLabel="ज" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="2366" keyLabel="ा" keyWidth="9" />
+        <Key codes="2360" keyLabel="स" keyWidth="9" />
+        <Key codes="2342" keyLabel="द" keyWidth="9" />
+        <Key codes="2298" keyLabel="ड" keyWidth="9" />
+        <Key codes="2327" keyLabel="ग" keyWidth="9" />
+        <Key codes="2361" keyLabel="ह" keyWidth="9" />
+        <Key codes="2332" keyLabel="ज" keyWidth="9" />
+        <Key codes="2325" keyLabel="क" keyWidth="9" />
+        <Key codes="2354" keyLabel="ल" keyWidth="9" />
+        <Key codes="2356" keyLabel="ऍ" keyWidth="9" />
+        <Key codes="2356" keyLabel="ऎ" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="-1"  keyLabel="⇧" keyWidth="13" />
+        <Key codes="2306" keyLabel="ं" keyWidth="9" />
+        <Key codes="2350" keyLabel="म" keyWidth="9" />
+        <Key codes="2344" keyLabel="न" keyWidth="9" />
+        <Key codes="2357" keyLabel="व" keyWidth="9" />
+        <Key codes="2354" keyLabel="ल" keyWidth="9" />
+        <Key codes="2358" keyLabel="श" keyWidth="9" />
+        <Key codes="2364" keyLabel="़" keyWidth="9" />
+        <Key codes="2381" keyLabel="्" keyWidth="9" />
+        <Key codes="2381" keyLabel="ः" keyWidth="9" />
+        <Key codes="-5"  keyLabel="⌫" keyWidth="13" />
+    </Row>
+    <Row>
+        <Key codes="-3"  keyLabel="123" keyWidth="14" />
+        <Key codes="-2"  keyLabel="😀" keyWidth="11" />
+        <Key codes="-10" keyLabel="🌐" keyWidth="11" />
+        <Key codes="32"  keyLabel="space" keyWidth="32" />
+        <Key codes="44"  keyLabel="," keyWidth="10" />
+        <Key codes="2404" keyLabel="।" popupCharacters=".:!?" keyWidth="10" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="12" />
+    </Row>
+</Keyboard>

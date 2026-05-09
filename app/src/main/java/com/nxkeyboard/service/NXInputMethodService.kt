@@ -114,6 +114,7 @@ class NXInputMethodService : InputMethodService() {
                 override fun onAiTranslate() { runAiTranslationDefault() }
                 override fun onClipboard() { openClipboardPanel() }
                 override fun onEmoji() { openEmojiKeyboard() }
+                override fun onVoice() { startVoiceInput() }
                 override fun onSettings() { openSettings() }
                 override fun onCollapse() { toggleSuggestionBar() }
             })
@@ -224,11 +225,45 @@ class NXInputMethodService : InputMethodService() {
     fun sendBackspace() {
         val ic = currentInputConnection ?: return
         val selection = ic.getSelectedText(0)
-        if (selection.isNullOrEmpty()) {
-            ic.deleteSurroundingText(1, 0)
-        } else {
+        if (!selection.isNullOrEmpty()) {
             ic.commitText("", 1)
+            return
         }
+        val before = ic.getTextBeforeCursor(8, 0)?.toString().orEmpty()
+        if (before.isEmpty()) {
+            ic.deleteSurroundingText(1, 0)
+            return
+        }
+        val deleteCount = computeGraphemeBackspaceCount(before)
+        ic.deleteSurroundingText(deleteCount, 0)
+    }
+
+    private fun computeGraphemeBackspaceCount(before: String): Int {
+        if (before.isEmpty()) return 1
+        var i = before.length
+        if (i >= 2 && before[i - 1].isLowSurrogate() && before[i - 2].isHighSurrogate()) {
+            i -= 2
+        } else {
+            i -= 1
+        }
+        while (i > 0) {
+            val codePoint = before.codePointBefore(i)
+            val charCount = Character.charCount(codePoint)
+            val prevStart = i - charCount
+            val isModifier = isEmojiContinuation(codePoint)
+            if (!isModifier) break
+            i = prevStart
+        }
+        return before.length - i
+    }
+
+    private fun isEmojiContinuation(codePoint: Int): Boolean {
+        if (codePoint == 0x200D) return true
+        if (codePoint == 0xFE0F || codePoint == 0xFE0E) return true
+        if (codePoint in 0x1F1E6..0x1F1FF) return true
+        if (codePoint in 0x1F3FB..0x1F3FF) return true
+        if (codePoint in 0xE0020..0xE007F) return true
+        return false
     }
 
     fun sendEnter() {

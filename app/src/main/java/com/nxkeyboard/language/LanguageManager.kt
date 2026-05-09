@@ -46,6 +46,7 @@ class LanguageManager(private val context: Context) {
     fun displayNameOf(locale: String): String = when (locale) {
         "tr"    -> "Türkçe (Q)"
         "tr_f"  -> "Türkçe (F)"
+        "az"    -> "Azərbaycanca"
         "en"    -> "English"
         "de"    -> "Deutsch"
         "fr"    -> "Français"
@@ -86,12 +87,14 @@ class LanguageManager(private val context: Context) {
         "ru"    -> R.xml.keyboard_ru
         "ar"    -> R.xml.keyboard_ar
         "ja"    -> R.xml.keyboard_ja
+        "az"    -> R.xml.keyboard_az
+        "hi"    -> R.xml.keyboard_hi
         else    -> R.xml.keyboard_en
     }
 
     companion object {
         val SUPPORTED_LOCALES = listOf(
-            "en", "tr", "de", "fr", "es", "it", "pt", "ru", "uk", "ar", "fa", "ur", "he",
+            "en", "tr", "tr_f", "az", "de", "fr", "es", "it", "pt", "ru", "uk", "ar", "fa", "ur", "he",
             "ja", "ko", "zh-CN", "zh-TW", "hi", "bn", "el", "th", "vi", "pl", "nl", "sv",
             "da", "fi", "id"
         )

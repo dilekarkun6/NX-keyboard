@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="app_language_entries">
+        <item>@string/app_lang_system</item>
+        <item>@string/app_lang_en</item>
+        <item>@string/app_lang_tr</item>
+    </string-array>
+    <string-array name="app_language_values">
+        <item>system</item>
+        <item>en</item>
+        <item>tr</item>
+    </string-array>
+
     <string-array name="theme_entries">
         <item>@string/theme_entry_light</item>
         <item>@string/theme_entry_dark</item>
@@ -69,12 +80,14 @@
         <item>@string/key_sound_system</item>
         <item>@string/key_sound_tone</item>
         <item>@string/key_sound_spacebar</item>
+        <item>@string/key_sound_custom</item>
     </string-array>
     <string-array name="key_sound_values">
         <item>off</item>
         <item>system</item>
         <item>tone</item>
         <item>spacebar</item>
+        <item>custom</item>
     </string-array>
 
     <string-array name="haptic_intensity_entries">

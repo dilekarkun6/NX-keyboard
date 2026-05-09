@@ -23,6 +23,7 @@ class SuggestionBar @JvmOverloads constructor(
         fun onAiTranslate()
         fun onClipboard()
         fun onEmoji()
+        fun onVoice()
         fun onSettings()
         fun onCollapse()
     }
@@ -48,6 +49,8 @@ class SuggestionBar @JvmOverloads constructor(
         val showAi = PrefsHelper.getBoolean(ctx, "show_ai_button", true)
         val showTranslate = PrefsHelper.getBoolean(ctx, "show_translate_button", false)
         val showUndo = PrefsHelper.getBoolean(ctx, "show_undo_redo", true)
+        val showVoice = PrefsHelper.getBoolean(ctx, "show_voice_button", true)
+        val showClipboard = PrefsHelper.getBoolean(ctx, "show_clipboard_button", true)
 
         if (showUndo) {
             addAction("↶") { callback?.onUndo() }
@@ -55,8 +58,8 @@ class SuggestionBar @JvmOverloads constructor(
         }
         if (showAi) addAction("✨") { callback?.onAiCorrect() }
         if (showTranslate) addAction("🌍") { callback?.onAiTranslate() }
-        addAction("📋") { callback?.onClipboard() }
-        addAction("😀") { callback?.onEmoji() }
+        if (showVoice) addAction("🎤") { callback?.onVoice() }
+        if (showClipboard) addAction("📋") { callback?.onClipboard() }
         addAction("⚙") { callback?.onSettings() }
         addAction("▼") { callback?.onCollapse() }
         applyTheme()

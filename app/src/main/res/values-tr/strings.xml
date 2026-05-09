@@ -10,6 +10,11 @@
     <string name="choose_keyboard_summary">Klavye değiştiriciyi aç</string>
 
     <string name="cat_general">Genel</string>
+    <string name="app_language_title">Uygulama dili</string>
+    <string name="app_language_summary">Uygulama içinde kullanılan dil (sistemden bağımsız)</string>
+    <string name="app_lang_system">Sistemi takip et</string>
+    <string name="app_lang_en">English (İngilizce)</string>
+    <string name="app_lang_tr">Türkçe</string>
     <string name="theme_title">Tema</string>
     <string name="theme_summary">Açık, koyu veya sistemi takip et</string>
     <string name="haptic_title">Titreşim geri bildirimi</string>
@@ -97,6 +102,11 @@
     <string name="key_sound_system">Sistem tıklaması</string>
     <string name="key_sound_tone">Ton sesi</string>
     <string name="key_sound_spacebar">Uzay tuş sesi</string>
+    <string name="key_sound_custom">Özel ses dosyası</string>
+    <string name="custom_sound_title">Özel ses dosyası</string>
+    <string name="custom_sound_summary">Tuşa basıldığında çalınacak MP3, WAV, OGG veya M4A dosyası seç</string>
+    <string name="custom_sound_set">✓ Özel ses seçili</string>
+    <string name="clear_custom_sound_title">Özel sesi kaldır</string>
 
     <string name="kb_height_small">Küçük</string>
     <string name="kb_height_normal">Normal</string>

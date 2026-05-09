@@ -24,6 +24,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         com.nxkeyboard.utils.CrashLogger.install(this)
+        applyAppLanguage()
         applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -36,12 +37,28 @@ class SettingsActivity : AppCompatActivity() {
         title = getString(R.string.settings_title)
 
         themeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == "theme") {
-                applyThemeFromPrefs()
-                recreate()
+            when (key) {
+                "theme" -> {
+                    applyThemeFromPrefs()
+                    recreate()
+                }
+                "app_language" -> {
+                    applyAppLanguage()
+                    recreate()
+                }
             }
         }
         PrefsHelper.get(this).registerOnSharedPreferenceChangeListener(themeListener)
+    }
+
+    private fun applyAppLanguage() {
+        val lang = PrefsHelper.getString(this, "app_language", "system")
+        val locales = if (lang == "system" || lang.isBlank()) {
+            androidx.core.os.LocaleListCompat.getEmptyLocaleList()
+        } else {
+            androidx.core.os.LocaleListCompat.forLanguageTags(lang)
+        }
+        AppCompatDelegate.setApplicationLocales(locales)
     }
 
     override fun onDestroy() {
@@ -68,6 +85,7 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
 
         private lateinit var imagePicker: ActivityResultLauncher<Array<String>>
+        private lateinit var audioPicker: ActivityResultLauncher<Array<String>>
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -86,6 +104,24 @@ class SettingsActivity : AppCompatActivity() {
                         .putString("keyboard_background_uri", uri.toString())
                         .apply()
                     findPreference<Preference>("keyboard_background")?.summary = getString(R.string.keyboard_background_set)
+                }
+            }
+            audioPicker = registerForActivityResult(
+                ActivityResultContracts.OpenDocument()
+            ) { uri: Uri? ->
+                if (uri != null) {
+                    val ctx = requireContext()
+                    try {
+                        ctx.contentResolver.takePersistableUriPermission(
+                            uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        )
+                    } catch (_: Throwable) {}
+                    PreferenceManager.getDefaultSharedPreferences(ctx).edit()
+                        .putString("custom_sound_uri", uri.toString())
+                        .putString("key_sound", "custom")
+                        .apply()
+                    findPreference<Preference>("custom_sound")?.summary = getString(R.string.custom_sound_set)
                 }
             }
         }
@@ -107,7 +143,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val languagesPref = findPreference<MultiSelectListPreference>("enabled_languages")
             languagesPref?.let { pref ->
-                val entries = listOf("en", "tr", "tr_f", "de", "fr", "es", "ru", "ar", "ja")
+                val entries = listOf("en", "tr", "tr_f", "az", "de", "fr", "es", "ru", "ar", "ja", "hi")
                 pref.entries = entries.map { localeDisplayName(it) }.toTypedArray()
                 pref.entryValues = entries.toTypedArray()
                 if (pref.values.isEmpty()) pref.values = setOf("tr")
@@ -146,6 +182,27 @@ class SettingsActivity : AppCompatActivity() {
                     .remove("keyboard_background_uri")
                     .apply()
                 findPreference<Preference>("keyboard_background")?.summary = getString(R.string.keyboard_background_summary)
+                true
+            }
+
+            findPreference<Preference>("custom_sound")?.let { pref ->
+                val uri = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                    .getString("custom_sound_uri", "")
+                pref.summary = if (uri.isNullOrBlank())
+                    getString(R.string.custom_sound_summary)
+                else
+                    getString(R.string.custom_sound_set)
+                pref.setOnPreferenceClickListener {
+                    audioPicker.launch(arrayOf("audio/*"))
+                    true
+                }
+            }
+
+            findPreference<Preference>("clear_custom_sound")?.setOnPreferenceClickListener {
+                PreferenceManager.getDefaultSharedPreferences(requireContext()).edit()
+                    .remove("custom_sound_uri")
+                    .apply()
+                findPreference<Preference>("custom_sound")?.summary = getString(R.string.custom_sound_summary)
                 true
             }
 
@@ -203,6 +260,7 @@ class SettingsActivity : AppCompatActivity() {
         private fun localeDisplayName(locale: String): String = when (locale) {
             "tr"   -> "Türkçe (Q)"
             "tr_f" -> "Türkçe (F)"
+            "az"   -> "Azərbaycanca"
             "en"   -> "English"
             "de"   -> "Deutsch"
             "fr"   -> "Français"
@@ -210,6 +268,7 @@ class SettingsActivity : AppCompatActivity() {
             "ru"   -> "Русский"
             "ar"   -> "العربية"
             "ja"   -> "日本語"
+            "hi"   -> "हिन्दी"
             else   -> locale
         }
     }
