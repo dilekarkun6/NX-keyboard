@@ -17,16 +17,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Make gradlew executable
         run: chmod +x gradlew
@@ -37,35 +37,70 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee build.log
+          ./gradlew assembleDebug --no-daemon --stacktrace --console=plain 2>&1 | tee build.log
 
-      - name: Generate error report
+      - name: Extract error
         if: steps.build.outcome == 'failure'
         shell: bash
         run: |
-          {
-            echo "Fix this error:"
-            echo ""
-            echo "==================================================================="
-            echo ""
-            if [ -f build.log ]; then
-              cat build.log
-            else
-              echo "Build log was not generated - the build crashed before producing output."
-            fi
-            echo ""
-            echo "==================================================================="
-            echo "Commit:        ${{ github.sha }}"
-            echo "Branch / ref:  ${{ github.ref }}"
-            echo "Workflow run:  ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          } > error.txt
-          echo "::error::Build failed. See the 'build-error-report' artifact for full log."
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
 
-      - name: Upload error report
+          log_path = Path("build.log")
+          out = ["Fix this error:", ""]
+
+          if not log_path.exists():
+              out.append("(no build log was produced)")
+              Path("error.txt").write_text("\n".join(out))
+              raise SystemExit(0)
+
+          text = log_path.read_text(errors="replace")
+          lines = text.splitlines()
+
+          kotlin_errors = []
+          for i, line in enumerate(lines):
+              if re.match(r"^e: ", line) or re.search(r"error:", line, re.IGNORECASE):
+                  kotlin_errors.append(line.rstrip())
+                  if i + 1 < len(lines) and lines[i + 1].strip().startswith("^"):
+                      kotlin_errors.append(lines[i + 1].rstrip())
+
+          gradle_blocks = []
+          i = 0
+          while i < len(lines):
+              if lines[i].startswith("FAILURE:"):
+                  block = []
+                  j = i
+                  while j < len(lines) and not lines[j].startswith("BUILD FAILED") and not lines[j].startswith("* Get more help"):
+                      block.append(lines[j].rstrip())
+                      j += 1
+                  gradle_blocks.append("\n".join(block).strip())
+                  i = j
+              i += 1
+
+          if kotlin_errors:
+              out.append("--- Compilation errors ---")
+              out.extend(kotlin_errors[:80])
+              out.append("")
+
+          if gradle_blocks:
+              out.append("--- Gradle failure ---")
+              out.append(gradle_blocks[0])
+              out.append("")
+
+          if not kotlin_errors and not gradle_blocks:
+              out.append("--- Last 80 lines of build log ---")
+              out.extend(line.rstrip() for line in lines[-80:])
+
+          Path("error.txt").write_text("\n".join(out) + "\n")
+          PY
+          echo "::error::Build failed. Download the 'build-error' artifact for the error report."
+
+      - name: Upload error
         if: steps.build.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: build-error-report
+          name: build-error
           path: error.txt
           retention-days: 30
 
