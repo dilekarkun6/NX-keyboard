@@ -45,7 +45,9 @@ object ClipboardHelper {
     }
 
     private const val HISTORY_KEY = "clipboard_history"
-    private const val MAX_HISTORY = 10
+    private const val PINNED_KEY = "clipboard_pinned"
+    private const val MAX_HISTORY = 20
+    private const val MAX_PINNED = 50
 
     fun addToHistory(context: Context, text: String) {
         if (text.isBlank()) return
@@ -65,5 +67,33 @@ object ClipboardHelper {
 
     fun clearHistory(context: Context) {
         PrefsHelper.get(context).edit().remove(HISTORY_KEY).apply()
+    }
+
+    fun getPinned(context: Context): List<String> {
+        val raw = PrefsHelper.get(context).getString(PINNED_KEY, "") ?: ""
+        return if (raw.isEmpty()) emptyList() else raw.split("\u0001")
+    }
+
+    fun pin(context: Context, text: String) {
+        if (text.isBlank()) return
+        val list = getPinned(context).toMutableList()
+        list.remove(text)
+        list.add(0, text)
+        val trimmed = list.take(MAX_PINNED)
+        PrefsHelper.get(context).edit()
+            .putString(PINNED_KEY, trimmed.joinToString("\u0001"))
+            .apply()
+    }
+
+    fun unpin(context: Context, text: String) {
+        val list = getPinned(context).toMutableList()
+        list.remove(text)
+        PrefsHelper.get(context).edit()
+            .putString(PINNED_KEY, list.joinToString("\u0001"))
+            .apply()
+    }
+
+    fun isPinned(context: Context, text: String): Boolean {
+        return text in getPinned(context)
     }
 }

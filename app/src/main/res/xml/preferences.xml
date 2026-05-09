@@ -41,6 +41,26 @@
             app:entryValues="@array/keyboard_height_values"
             app:defaultValue="1.15" />
         <SwitchPreferenceCompat
+            app:key="show_top_bar"
+            app:title="Üst bar"
+            app:summary="Klavyenin üzerinde geri al / AI / pano / emoji çubuğunu göster"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="show_undo_redo"
+            app:title="Geri al / İleri al butonları"
+            app:summary="Üst barda ↶ ↷ butonlarını göster"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="long_press_popup"
+            app:title="Uzun basınca alternatif karakter"
+            app:summary="Bir tuşa uzun basınca aksanlı/farklı varyantlarını göster (örn. p → π)"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="hold_repeat"
+            app:title="Tuşa basılı tutunca tekrarla"
+            app:summary="Boşluk dahil herhangi bir tuşa basılı tutunca yazma sürsün"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
             app:key="double_space_period"
             app:title="Çift boşlukla nokta"
             app:summary="İki kez boşluk basıldığında otomatik olarak nokta + boşluk yazsın"
@@ -48,12 +68,12 @@
         <SwitchPreferenceCompat
             app:key="show_translate_button"
             app:title="Çeviri butonunu göster"
-            app:summary="Pano araç çubuğunda 🌍 çeviri butonunu göster"
+            app:summary="Üst barda 🌍 çeviri butonunu göster"
             app:defaultValue="false" />
         <SwitchPreferenceCompat
             app:key="show_ai_button"
             app:title="AI düzeltme butonunu göster"
-            app:summary="Klavyede ve araç çubuğunda ✨ AI butonunu göster"
+            app:summary="Üst barda ✨ AI butonunu göster"
             app:defaultValue="true" />
         <Preference
             app:key="keyboard_background"
@@ -102,7 +122,7 @@
             app:title="@string/ai_model_title"
             app:entries="@array/ai_model_entries"
             app:entryValues="@array/ai_model_values"
-            app:defaultValue="openrouter/free" />
+            app:defaultValue="google/gemini-2.0-flash-exp:free" />
         <ListPreference
             app:key="ai_target_lang"
             app:title="@string/ai_target_lang_title"
@@ -116,6 +136,10 @@
             app:key="ai_user_key"
             app:title="@string/ai_user_key_title"
             app:summary="@string/ai_user_key_summary" />
+        <EditTextPreference
+            app:key="phonetic_dict"
+            app:title="Fonetik sözlük"
+            app:summary="Yanlış telaffuzu doğru hale getirmek için kelime eşlemeleri (Klod=Claude, Konyıl=Hyundai). Her satıra bir tane &quot;yanlış=doğru&quot; yaz." />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/cat_about">

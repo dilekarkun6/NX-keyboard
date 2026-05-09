@@ -68,7 +68,19 @@ class NXKeyboardView @JvmOverloads constructor(
 
     private val handler = Handler(Looper.getMainLooper())
     private var deleteRunnable: Runnable? = null
+    private var characterRepeatRunnable: Runnable? = null
+    private var longPressRunnable: Runnable? = null
     private var lastEditorInfo: EditorInfo? = null
+
+    private var popupActive = false
+    private var popupOptions: List<String> = emptyList()
+    private var popupAnchor: RectF? = null
+    private var popupSelectedIndex: Int = -1
+    private val popupBgPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val popupItemPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val popupSelectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val popupTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val popupSelectedTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private data class KeyRect(val key: Key, val rect: RectF, val rowIndex: Int)
 
@@ -189,6 +201,17 @@ class NXKeyboardView @JvmOverloads constructor(
         enterLabelPaint.textAlign = Paint.Align.CENTER
         enterLabelPaint.textSize = sp(15f)
         enterLabelPaint.typeface = Typeface.DEFAULT_BOLD
+
+        popupBgPaint.color = Color.parseColor("#212121")
+        popupItemPaint.color = Color.parseColor("#424242")
+        popupSelectedPaint.color = Color.parseColor("#1976D2")
+        popupTextPaint.color = Color.WHITE
+        popupTextPaint.textAlign = Paint.Align.CENTER
+        popupTextPaint.textSize = sp(20f)
+        popupSelectedTextPaint.color = Color.WHITE
+        popupSelectedTextPaint.textAlign = Paint.Align.CENTER
+        popupSelectedTextPaint.textSize = sp(22f)
+        popupSelectedTextPaint.typeface = Typeface.DEFAULT_BOLD
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -207,12 +230,16 @@ class NXKeyboardView @JvmOverloads constructor(
         keyRects.clear()
         if (width == 0 || layout.rows.isEmpty()) return
         val totalWidth = width.toFloat()
+        val singleLang = (languageManager?.enabledList?.size ?: 0) <= 1
         var y = paddingTop.toFloat()
         for ((rowIndex, row) in layout.rows.withIndex()) {
-            val totalPercent = row.keys.sumOf { it.widthPercent.toDouble() }.toFloat()
+            val visibleKeys = row.keys.filter { key ->
+                !(singleLang && key.code == KeyboardLayoutManager.CODE_LANGUAGE)
+            }
+            val totalPercent = visibleKeys.sumOf { it.widthPercent.toDouble() }.toFloat()
             val percentScale = if (totalPercent > 0) 100f / totalPercent else 1f
             var x = 0f
-            for (key in row.keys) {
+            for (key in visibleKeys) {
                 val keyWidth = totalWidth * (key.widthPercent * percentScale / 100f)
                 val rect = RectF(
                     x + keyPadding,
@@ -242,6 +269,36 @@ class NXKeyboardView @JvmOverloads constructor(
         }
         for (kr in keyRects) {
             drawKey(canvas, kr)
+        }
+        if (popupActive) {
+            drawPopup(canvas)
+        }
+    }
+
+    private fun drawPopup(canvas: Canvas) {
+        val anchor = popupAnchor ?: return
+        if (popupOptions.isEmpty()) return
+        val itemWidth = dp(40f)
+        val itemHeight = dp(48f)
+        val totalWidth = itemWidth * popupOptions.size
+        val centerX = anchor.centerX()
+        val startX = (centerX - totalWidth / 2f).coerceIn(0f, width - totalWidth)
+        val top = (anchor.top - itemHeight - dp(8f)).coerceAtLeast(0f)
+        val padding = dp(4f)
+        val bgRect = RectF(startX - padding, top - padding, startX + totalWidth + padding, top + itemHeight + padding)
+        canvas.drawRoundRect(bgRect, dp(10f), dp(10f), popupBgPaint)
+        for ((i, ch) in popupOptions.withIndex()) {
+            val itemRect = RectF(
+                startX + i * itemWidth + dp(2f),
+                top + dp(2f),
+                startX + (i + 1) * itemWidth - dp(2f),
+                top + itemHeight - dp(2f)
+            )
+            val paint = if (i == popupSelectedIndex) popupSelectedPaint else popupItemPaint
+            canvas.drawRoundRect(itemRect, dp(6f), dp(6f), paint)
+            val textPaint = if (i == popupSelectedIndex) popupSelectedTextPaint else popupTextPaint
+            val textY = itemRect.centerY() - (textPaint.fontMetrics.ascent + textPaint.fontMetrics.descent) / 2
+            canvas.drawText(ch, itemRect.centerX(), textY, textPaint)
         }
     }
 
@@ -316,6 +373,8 @@ class NXKeyboardView @JvmOverloads constructor(
                     HapticHelper.keyPress(this)
                     if (target.key.code == KeyboardLayoutManager.CODE_BACKSPACE) {
                         scheduleRepeatingDelete()
+                    } else {
+                        scheduleLongPress(target)
                     }
                 }
                 invalidate()
@@ -323,7 +382,20 @@ class NXKeyboardView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_UP -> {
                 cancelRepeatingDelete()
-                pressedRect?.let { handleKeyClick(it.key) }
+                cancelCharacterRepeat()
+                cancelLongPress()
+                if (popupActive && popupSelectedIndex in popupOptions.indices) {
+                    val service = imeService
+                    if (service != null) {
+                        val text = popupOptions[popupSelectedIndex]
+                        val out = if (isShifted || isCapsLocked) text.uppercase() else text
+                        service.commitText(out)
+                        playKeySound()
+                    }
+                    dismissPopup()
+                } else {
+                    pressedRect?.let { handleKeyClick(it.key) }
+                }
                 pressedRect = null
                 pressedKey = null
                 invalidate()
@@ -331,22 +403,122 @@ class NXKeyboardView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_CANCEL -> {
                 cancelRepeatingDelete()
+                cancelCharacterRepeat()
+                cancelLongPress()
+                dismissPopup()
                 pressedRect = null
                 pressedKey = null
                 invalidate()
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
+                if (popupActive) {
+                    updatePopupSelection(x)
+                    invalidate()
+                    return true
+                }
                 val target = keyRects.firstOrNull { it.rect.contains(x, y) }
                 if (target?.rect != pressedRect?.rect) {
+                    cancelLongPress()
+                    cancelCharacterRepeat()
                     pressedRect = target
                     pressedKey = target?.key
+                    if (target != null && target.key.code != KeyboardLayoutManager.CODE_BACKSPACE) {
+                        scheduleLongPress(target)
+                    }
                     invalidate()
                 }
                 return true
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    private fun scheduleLongPress(target: KeyRect) {
+        cancelLongPress()
+        val ctx = context
+        val popupEnabled = PrefsHelper.getBoolean(ctx, "long_press_popup", true)
+        val holdRepeatEnabled = PrefsHelper.getBoolean(ctx, "hold_repeat", true)
+        val key = target.key
+        val popupChars = key.popupList
+
+        longPressRunnable = Runnable {
+            if (pressedRect?.rect == target.rect) {
+                if (popupEnabled && popupChars.isNotEmpty() && !key.isFunctional) {
+                    showPopup(target, popupChars)
+                } else if (holdRepeatEnabled && isCharacterCode(key.code)) {
+                    startCharacterRepeat(key)
+                } else if (key.code == KeyboardLayoutManager.CODE_SPACE && holdRepeatEnabled) {
+                    startCharacterRepeat(key)
+                }
+            }
+        }
+        handler.postDelayed(longPressRunnable!!, 380)
+    }
+
+    private fun cancelLongPress() {
+        longPressRunnable?.let { handler.removeCallbacks(it) }
+        longPressRunnable = null
+    }
+
+    private fun isCharacterCode(code: Int): Boolean {
+        return code > 32
+    }
+
+    private fun showPopup(anchor: KeyRect, options: List<String>) {
+        val baseLabel = anchor.key.label
+        val combined = if (baseLabel.isNotEmpty() && baseLabel !in options) {
+            listOf(baseLabel) + options
+        } else {
+            options
+        }
+        popupOptions = combined
+        popupAnchor = anchor.rect
+        popupSelectedIndex = combined.indexOf(baseLabel).coerceAtLeast(0)
+        popupActive = true
+        HapticHelper.longPress(this)
+        invalidate()
+    }
+
+    private fun dismissPopup() {
+        popupActive = false
+        popupOptions = emptyList()
+        popupAnchor = null
+        popupSelectedIndex = -1
+    }
+
+    private fun updatePopupSelection(touchX: Float) {
+        val anchor = popupAnchor ?: return
+        if (popupOptions.isEmpty()) return
+        val itemWidth = dp(40f)
+        val totalWidth = itemWidth * popupOptions.size
+        val centerX = anchor.centerX()
+        val startX = (centerX - totalWidth / 2).coerceIn(0f, width - totalWidth)
+        val rel = ((touchX - startX) / itemWidth).toInt()
+        popupSelectedIndex = rel.coerceIn(0, popupOptions.size - 1)
+    }
+
+    private fun startCharacterRepeat(key: Key) {
+        cancelCharacterRepeat()
+        val service = imeService ?: return
+        if (key.label.isEmpty() && key.code != KeyboardLayoutManager.CODE_SPACE) return
+        characterRepeatRunnable = object : Runnable {
+            override fun run() {
+                if (key.code == KeyboardLayoutManager.CODE_SPACE) {
+                    service.commitText(" ")
+                } else {
+                    val out = if (isShifted || isCapsLocked) key.label.uppercase() else key.label
+                    service.commitText(out)
+                }
+                handler.postDelayed(this, 60)
+            }
+        }
+        handler.post(characterRepeatRunnable!!)
+    }
+
+    private fun cancelCharacterRepeat() {
+        characterRepeatRunnable?.let { handler.removeCallbacks(it) }
+        characterRepeatRunnable = null
     }
 
     private fun handleKeyClick(key: Key) {

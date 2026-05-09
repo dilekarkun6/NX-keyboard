@@ -66,11 +66,13 @@ class SettingsActivity : AppCompatActivity() {
 
     class SettingsFragment : PreferenceFragmentCompat() {
 
-        private lateinit var imagePicker: ActivityResultLauncher<String>
+        private lateinit var imagePicker: ActivityResultLauncher<Array<String>>
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            imagePicker = registerForActivityResult(
+                ActivityResultContracts.OpenDocument()
+            ) { uri: Uri? ->
                 if (uri != null) {
                     val ctx = requireContext()
                     try {
@@ -133,7 +135,7 @@ class SettingsActivity : AppCompatActivity() {
                     .getString("keyboard_background_uri", "")
                 pref.summary = if (uri.isNullOrBlank()) "Resim seçmek için dokunun" else "✓ Arkaplan ayarlandı"
                 pref.setOnPreferenceClickListener {
-                    imagePicker.launch("image/*")
+                    imagePicker.launch(arrayOf("image/*"))
                     true
                 }
             }

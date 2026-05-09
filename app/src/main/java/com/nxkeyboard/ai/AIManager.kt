@@ -51,14 +51,14 @@ class AIManager(private val context: Context) {
 
     companion object {
         const val BASE_URL = "https://openrouter.ai/api/v1"
-        const val DEFAULT_MODEL = "openrouter/free"
+        const val DEFAULT_MODEL = "google/gemini-2.0-flash-exp:free"
 
         private val FALLBACK_CHAIN = listOf(
+            "google/gemini-2.0-flash-exp:free",
             "openrouter/free",
             "deepseek/deepseek-chat-v3-0324:free",
             "deepseek/deepseek-r1:free",
             "meta-llama/llama-3.3-70b-instruct:free",
-            "google/gemini-2.0-flash-exp:free",
             "mistralai/mistral-small-3.1-24b-instruct:free"
         )
     }
@@ -81,11 +81,19 @@ class AIManager(private val context: Context) {
 
     suspend fun correct(text: String, language: String): Result<String> = withContext(Dispatchers.IO) {
         if (text.isBlank()) return@withContext Result.failure(IllegalArgumentException("Empty text"))
-        val prompt = "You are an expert linguist. Read the following $language text from a user who " +
-            "may have spelled words phonetically or made typos. Infer the intended meaning even if " +
-            "words are mispronounced or written incorrectly. Then output ONLY the corrected, natural " +
-            "version of the text, with proper grammar, spelling, and punctuation. Do not add any " +
-            "explanation, quotes, or commentary.\n\n$text"
+        val phoneticHints = PrefsHelper.getString(context, "phonetic_dict", "")
+        val hintsBlock = if (phoneticHints.isNotBlank()) {
+            "\nThe user has a personal phonetic dictionary. When you see a token on the left, " +
+                "interpret it as the right-hand value:\n$phoneticHints\n"
+        } else ""
+        val prompt = "You are an expert linguist correcting text typed on a phone in $language. " +
+            "The writer often spells phonetically, mistypes adjacent keys, omits diacritics, drops " +
+            "punctuation, and writes proper nouns by sound. Reconstruct the most likely intended " +
+            "sentence and output ONLY the corrected text — no quotes, no explanation, no commentary. " +
+            "Preserve the user's tone and intent exactly. DO NOT censor, mask, blur, or replace any " +
+            "word — slang, profanity, and adult language must be passed through untouched and " +
+            "uncensored. Output the words as written, never with asterisks or substitutes." +
+            hintsBlock + "\n\nUser text:\n$text"
         callAIWithFallback(prompt)
     }
 

@@ -11,9 +11,10 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.nxkeyboard.ai.AIManager
-import com.nxkeyboard.keyboard.ClipboardToolbar
+import com.nxkeyboard.keyboard.ClipboardPanel
 import com.nxkeyboard.keyboard.EmojiKeyboardView
 import com.nxkeyboard.keyboard.NXKeyboardView
+import com.nxkeyboard.keyboard.SuggestionBar
 import com.nxkeyboard.keyboard.VoiceInputManager
 import com.nxkeyboard.language.LanguageManager
 import com.nxkeyboard.settings.SettingsActivity
@@ -35,14 +36,15 @@ class NXInputMethodService : InputMethodService() {
     private lateinit var voiceInputManager: VoiceInputManager
 
     private lateinit var rootContainer: LinearLayout
-    private lateinit var toolbarContainer: FrameLayout
+    private lateinit var suggestionBar: SuggestionBar
     private lateinit var keyboardArea: FrameLayout
     private lateinit var keyboardView: NXKeyboardView
     private lateinit var emojiKeyboardView: EmojiKeyboardView
-    private lateinit var clipboardToolbar: ClipboardToolbar
+    private lateinit var clipboardPanel: ClipboardPanel
 
     private var emojiVisible = false
     private var clipboardVisible = false
+    private var suggestionBarVisible = true
 
     private val coroutineScope: CoroutineScope by lazy {
         CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -71,38 +73,22 @@ class NXInputMethodService : InputMethodService() {
             )
         }
 
-        toolbarContainer = FrameLayout(this).apply {
-            visibility = View.GONE
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
-        rootContainer.addView(toolbarContainer)
-
-        clipboardToolbar = ClipboardToolbar(this).apply {
-            configure(themeManager, object : ClipboardToolbar.Callback {
-                override fun onCopy() { ClipboardHelper.copy(this@NXInputMethodService, currentInputConnection) }
-                override fun onCut() { ClipboardHelper.cut(this@NXInputMethodService, currentInputConnection) }
-                override fun onPaste() { ClipboardHelper.paste(this@NXInputMethodService, currentInputConnection) }
-                override fun onSelectAll() { ClipboardHelper.selectAll(currentInputConnection) }
-                override fun onCursorLeft() { ClipboardHelper.moveCursor(currentInputConnection, -1) }
-                override fun onCursorRight() { ClipboardHelper.moveCursor(currentInputConnection, 1) }
-                override fun onClose() { toggleClipboardToolbar() }
+        suggestionBar = SuggestionBar(this).apply {
+            configure(themeManager, object : SuggestionBar.Callback {
+                override fun onUndo() { performUndo() }
+                override fun onRedo() { performRedo() }
                 override fun onAiCorrect() { runAiCorrection() }
                 override fun onAiTranslate() { runAiTranslationDefault() }
-                override fun onPasteHistoryItem(text: String) {
-                    pasteFromHistory(text)
-                }
-                override fun onClearHistory() {
-                    clearClipboardHistory()
-                }
-                override fun getHistorySnapshot(): List<String> {
-                    return getClipboardHistory()
-                }
+                override fun onClipboard() { openClipboardPanel() }
+                override fun onEmoji() { openEmojiKeyboard() }
+                override fun onSettings() { openSettings() }
+                override fun onCollapse() { toggleSuggestionBar() }
             })
         }
-        toolbarContainer.addView(clipboardToolbar)
+        rootContainer.addView(
+            suggestionBar,
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        )
 
         keyboardArea = FrameLayout(this).apply {
             layoutParams = LinearLayout.LayoutParams(
@@ -132,6 +118,25 @@ class NXInputMethodService : InputMethodService() {
         }
         keyboardArea.addView(emojiKeyboardView)
 
+        clipboardPanel = ClipboardPanel(this).apply {
+            visibility = View.GONE
+            configure(themeManager, object : ClipboardPanel.Callback {
+                override fun onPasteText(text: String) {
+                    pasteFromHistory(text)
+                    closeClipboardPanel()
+                }
+                override fun onPin(text: String) { ClipboardHelper.pin(this@NXInputMethodService, text) }
+                override fun onUnpin(text: String) { ClipboardHelper.unpin(this@NXInputMethodService, text) }
+                override fun onClose() { closeClipboardPanel() }
+                override fun onClearHistory() { clearClipboardHistory() }
+            })
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                resources.displayMetrics.density.let { (it * 280).toInt() }
+            )
+        }
+        keyboardArea.addView(clipboardPanel)
+
         return rootContainer
     }
 
@@ -153,8 +158,14 @@ class NXInputMethodService : InputMethodService() {
         if (::emojiKeyboardView.isInitialized) {
             emojiKeyboardView.applyTheme()
         }
-        if (::clipboardToolbar.isInitialized) {
-            clipboardToolbar.rebuildActions()
+        if (::suggestionBar.isInitialized) {
+            suggestionBar.rebuild()
+            val showBar = PrefsHelper.getBoolean(this, "show_top_bar", true)
+            suggestionBarVisible = showBar
+            suggestionBar.visibility = if (showBar) View.VISIBLE else View.GONE
+        }
+        if (::clipboardPanel.isInitialized) {
+            clipboardPanel.applyTheme()
         }
     }
 
@@ -215,6 +226,7 @@ class NXInputMethodService : InputMethodService() {
         if (emojiVisible) {
             closeEmojiPanel()
         } else {
+            if (clipboardVisible) closeClipboardPanel()
             keyboardView.visibility = View.GONE
             emojiKeyboardView.visibility = View.VISIBLE
             emojiVisible = true
@@ -227,12 +239,40 @@ class NXInputMethodService : InputMethodService() {
         emojiVisible = false
     }
 
-    fun toggleClipboardToolbar() {
-        clipboardVisible = !clipboardVisible
-        toolbarContainer.visibility = if (clipboardVisible) View.VISIBLE else View.GONE
-        if (clipboardVisible && ::clipboardToolbar.isInitialized) {
-            clipboardToolbar.refreshHistory()
+    fun openClipboardPanel() {
+        if (clipboardVisible) {
+            closeClipboardPanel()
+        } else {
+            keyboardView.visibility = View.GONE
+            emojiKeyboardView.visibility = View.GONE
+            emojiVisible = false
+            clipboardPanel.visibility = View.VISIBLE
+            clipboardPanel.refresh()
+            clipboardVisible = true
         }
+    }
+
+    fun closeClipboardPanel() {
+        clipboardPanel.visibility = View.GONE
+        keyboardView.visibility = View.VISIBLE
+        clipboardVisible = false
+    }
+
+    fun toggleClipboardToolbar() = openClipboardPanel()
+
+    fun toggleSuggestionBar() {
+        suggestionBarVisible = !suggestionBarVisible
+        suggestionBar.visibility = if (suggestionBarVisible) View.VISIBLE else View.GONE
+    }
+
+    fun performUndo() {
+        val ic = currentInputConnection ?: return
+        ic.performContextMenuAction(android.R.id.undo)
+    }
+
+    fun performRedo() {
+        val ic = currentInputConnection ?: return
+        ic.performContextMenuAction(android.R.id.redo)
     }
 
     fun startVoiceInput() {
