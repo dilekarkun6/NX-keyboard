@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.nxkeyboard.R
 import com.nxkeyboard.theme.ThemeManager
 import com.nxkeyboard.utils.ClipboardHelper
 import com.nxkeyboard.utils.HapticHelper
@@ -51,13 +52,13 @@ class ClipboardPanel @JvmOverloads constructor(
             setPadding(dp(10), dp(8), dp(10), dp(6))
         }
         val title = TextView(context).apply {
-            text = "📋 Pano"
+            text = context.getString(R.string.clipboard_panel_title)
             textSize = 15f
             setPadding(0, 0, dp(8), 0)
         }
         headerRow.addView(title, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
         val clearBtn = TextView(context).apply {
-            text = "🗑 Geçmişi Temizle"
+            text = context.getString(R.string.clipboard_clear)
             textSize = 12f
             setPadding(dp(8), dp(4), dp(8), dp(4))
             setOnClickListener {
@@ -97,20 +98,20 @@ class ClipboardPanel @JvmOverloads constructor(
         val history = ClipboardHelper.getHistory(context).filter { it !in pinned }
 
         if (pinned.isNotEmpty()) {
-            contentColumn.addView(buildSectionLabel("📌 Sabitlenmiş"))
+            contentColumn.addView(buildSectionLabel(context.getString(R.string.clipboard_pinned)))
             for (text in pinned) {
                 contentColumn.addView(buildCard(text, true))
             }
         }
         if (history.isNotEmpty()) {
-            contentColumn.addView(buildSectionLabel("🕒 Geçmiş"))
+            contentColumn.addView(buildSectionLabel(context.getString(R.string.clipboard_history)))
             for (text in history) {
                 contentColumn.addView(buildCard(text, false))
             }
         }
         if (pinned.isEmpty() && history.isEmpty()) {
             val empty = TextView(context).apply {
-                text = "Pano boş.\nBir şeyler kopyaladığında buraya gelecek."
+                text = context.getString(R.string.clipboard_empty)
                 textSize = 13f
                 gravity = Gravity.CENTER
                 setPadding(dp(16), dp(32), dp(16), dp(32))

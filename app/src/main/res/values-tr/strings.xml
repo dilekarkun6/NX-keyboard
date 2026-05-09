@@ -11,36 +11,63 @@
 
     <string name="cat_general">Genel</string>
     <string name="theme_title">Tema</string>
-    <string name="theme_summary">Açık, Koyu ya da Sistem ayarına uy</string>
+    <string name="theme_summary">Açık, koyu veya sistemi takip et</string>
     <string name="haptic_title">Titreşim geri bildirimi</string>
-    <string name="haptic_summary">Tuşa basıldığında titret</string>
+    <string name="haptic_summary">Tuşa basınca titret</string>
     <string name="sound_title">Ses geri bildirimi</string>
-    <string name="sound_summary">Tuşa basıldığında ses çal</string>
+    <string name="sound_summary">Tuşa basınca ses çıkar</string>
+
+    <string name="key_sound_title">Tuş sesi</string>
+    <string name="key_sound_summary">Tuşa basıldığında çalınan ses</string>
+    <string name="haptic_intensity_title">Titreşim şiddeti</string>
+    <string name="haptic_intensity_summary">Tuşa basıldığında titreşim ne kadar güçlü olsun</string>
+    <string name="keyboard_height_title">Klavye boyutu</string>
+    <string name="keyboard_height_summary">Tuşların yüksekliği</string>
+    <string name="show_top_bar_title">Üst bar</string>
+    <string name="show_top_bar_summary">Klavyenin üzerinde geri al / AI / pano / emoji çubuğunu göster</string>
+    <string name="show_undo_redo_title">Geri al / İleri al butonları</string>
+    <string name="show_undo_redo_summary">Üst barda ↶ ↷ butonlarını göster</string>
+    <string name="long_press_popup_title">Uzun basınca alternatif karakter</string>
+    <string name="long_press_popup_summary">Bir tuşa uzun basınca aksanlı/farklı varyantlarını göster (örn. e → é è)</string>
+    <string name="hold_repeat_title">Tuşa basılı tutunca tekrarla</string>
+    <string name="hold_repeat_summary">Boşluk dahil herhangi bir tuşa basılı tutunca yazma sürsün</string>
+    <string name="double_space_period_title">Çift boşlukla nokta</string>
+    <string name="double_space_period_summary">İki kez boşluk basıldığında otomatik nokta + boşluk yaz</string>
+    <string name="show_translate_button_title">Çeviri butonunu göster</string>
+    <string name="show_translate_button_summary">Üst barda 🌍 çeviri butonunu göster</string>
+    <string name="show_ai_button_title">AI düzeltme butonunu göster</string>
+    <string name="show_ai_button_summary">Üst barda ✨ AI butonunu göster</string>
+    <string name="keyboard_background_title">Klavye arkaplan resmi</string>
+    <string name="keyboard_background_summary">Resim seçmek için dokunun</string>
+    <string name="keyboard_background_set">✓ Arkaplan ayarlandı</string>
+    <string name="clear_keyboard_background_title">Arkaplan resmini temizle</string>
 
     <string name="cat_languages">Diller</string>
     <string name="languages_title">Etkin diller</string>
-    <string name="languages_summary">Hangi klavye dilleri etkin olsun</string>
+    <string name="languages_summary">Hangi klavye dilleri aktif olsun seç</string>
 
     <string name="cat_emoji">Emoji</string>
-    <string name="clear_recent_emojis_title">Son kullanılan emojileri temizle</string>
+    <string name="clear_recent_emojis_title">Son emojileri temizle</string>
 
     <string name="cat_clipboard">Pano</string>
     <string name="clear_clipboard_history_title">Pano geçmişini temizle</string>
 
     <string name="cat_voice">Sesli yazma</string>
     <string name="voice_online_title">Çevrimiçi tanıma</string>
-    <string name="voice_online_summary">Google çevrimiçi sesli tanıma kullan</string>
+    <string name="voice_online_summary">Google çevrimiçi konuşma tanıma kullan</string>
 
     <string name="cat_ai">AI (OpenRouter)</string>
-    <string name="ai_enabled_title">AI özelliklerini aç</string>
-    <string name="ai_enabled_summary">OpenRouter ile çeviri ve düzeltme</string>
+    <string name="ai_enabled_title">AI özelliklerini etkinleştir</string>
+    <string name="ai_enabled_summary">OpenRouter ile metin çevir ve düzelt</string>
     <string name="ai_model_title">Model</string>
-    <string name="ai_target_lang_title">Varsayılan çeviri dili</string>
+    <string name="ai_target_lang_title">Varsayılan çeviri hedefi</string>
     <string name="ai_status_title">API anahtarı durumu</string>
-    <string name="ai_built_in_key_active">Yerleşik API anahtarı aktif</string>
-    <string name="ai_built_in_key_missing">Yerleşik anahtar yok. Aşağıdan kendi anahtarını ekle.</string>
-    <string name="ai_user_key_title">API anahtarını değiştir (isteğe bağlı)</string>
-    <string name="ai_user_key_summary">Boş bırakınca yerleşik anahtar kullanılır</string>
+    <string name="ai_built_in_key_active">Dahili API anahtarı aktif</string>
+    <string name="ai_built_in_key_missing">Dahili anahtar yok. Aşağıya kendi anahtarınızı ekleyin.</string>
+    <string name="ai_user_key_title">API anahtarını değiştir (opsiyonel)</string>
+    <string name="ai_user_key_summary">Boş bırakırsanız dahili anahtar kullanılır</string>
+    <string name="phonetic_dict_title">Fonetik sözlük</string>
+    <string name="phonetic_dict_summary">Sık yaptığınız yanlış telaffuzlar / yanlış yazımlar için kelime eşlemeleri (her satıra bir tane, biçim: yanlış=doğru). Örnek: Klod=Claude</string>
 
     <string name="cat_about">Hakkında</string>
     <string name="about_version_title">Sürüm</string>
@@ -48,4 +75,56 @@
     <string name="about_license_title">Lisans</string>
     <string name="about_license_summary">GNU AGPLv3</string>
     <string name="about_github_title">GitHub</string>
+
+    <string name="clipboard_panel_title">📋 Pano</string>
+    <string name="clipboard_clear">🗑 Geçmişi Temizle</string>
+    <string name="clipboard_pinned">📌 Sabitlenmiş</string>
+    <string name="clipboard_history">🕒 Geçmiş</string>
+    <string name="clipboard_empty">Pano boş.\nBir şeyler kopyaladığında buraya gelecek.</string>
+
+    <string name="ai_no_text">Çevirilecek metin yok</string>
+    <string name="ai_not_configured">AI yapılandırılmamış</string>
+    <string name="ai_translating">✨ Çeviriliyor…</string>
+    <string name="ai_correcting">✨ Düzeltiliyor…</string>
+    <string name="ai_translation_error">Çeviri hatası: %1$s</string>
+    <string name="ai_correction_error">Düzeltme hatası: %1$s</string>
+
+    <string name="theme_entry_light">Açık</string>
+    <string name="theme_entry_dark">Koyu</string>
+    <string name="theme_entry_system">Sistem</string>
+
+    <string name="key_sound_off">Kapalı</string>
+    <string name="key_sound_system">Sistem tıklaması</string>
+    <string name="key_sound_tone">Ton sesi</string>
+    <string name="key_sound_spacebar">Uzay tuş sesi</string>
+
+    <string name="kb_height_small">Küçük</string>
+    <string name="kb_height_normal">Normal</string>
+    <string name="kb_height_large">Büyük</string>
+    <string name="kb_height_xlarge">Çok büyük</string>
+
+    <string name="ai_model_auto">Otomatik (Önerilen — Free Router)</string>
+    <string name="ai_model_deepseek_v3">DeepSeek V3</string>
+    <string name="ai_model_deepseek_r1">DeepSeek R1</string>
+    <string name="ai_model_qwen3_coder">Qwen3 Coder 480B</string>
+    <string name="ai_model_llama_70b">Llama 3.3 70B</string>
+    <string name="ai_model_gemini_flash">Gemini 2.0 Flash</string>
+    <string name="ai_model_mistral_small">Mistral Small 3.1 24B</string>
+
+    <string name="ai_lang_english">İngilizce</string>
+    <string name="ai_lang_turkish">Türkçe</string>
+    <string name="ai_lang_german">Almanca</string>
+    <string name="ai_lang_french">Fransızca</string>
+    <string name="ai_lang_spanish">İspanyolca</string>
+    <string name="ai_lang_russian">Rusça</string>
+    <string name="ai_lang_arabic">Arapça</string>
+    <string name="ai_lang_japanese">Japonca</string>
+
+    <string name="haptic_intensity_off">Kapalı</string>
+    <string name="haptic_intensity_light">Hafif</string>
+    <string name="haptic_intensity_medium">Orta</string>
+    <string name="haptic_intensity_strong">Güçlü</string>
+
+    <string name="voice_permission_required">Mikrofon izni gerekli — Ayarlardan verin</string>
+    <string name="voice_error">Sesli yazma hatası (%1$d)</string>
 </resources>

@@ -17,6 +17,31 @@
     <string name="sound_title">Sound feedback</string>
     <string name="sound_summary">Play sound on key press</string>
 
+    <string name="key_sound_title">Key sound</string>
+    <string name="key_sound_summary">Sound played when a key is pressed</string>
+    <string name="haptic_intensity_title">Vibration intensity</string>
+    <string name="haptic_intensity_summary">How strong the key-press vibration feels</string>
+    <string name="keyboard_height_title">Keyboard size</string>
+    <string name="keyboard_height_summary">Height of the keys</string>
+    <string name="show_top_bar_title">Top bar</string>
+    <string name="show_top_bar_summary">Show the undo / AI / clipboard / emoji bar above the keyboard</string>
+    <string name="show_undo_redo_title">Undo / Redo buttons</string>
+    <string name="show_undo_redo_summary">Show ↶ ↷ buttons in the top bar</string>
+    <string name="long_press_popup_title">Long-press alternates</string>
+    <string name="long_press_popup_summary">Show accented / variant characters when you hold a key</string>
+    <string name="hold_repeat_title">Hold-to-repeat</string>
+    <string name="hold_repeat_summary">Holding any key (including space) types it repeatedly</string>
+    <string name="double_space_period_title">Double-space period</string>
+    <string name="double_space_period_summary">Tapping space twice quickly inserts a period and a space</string>
+    <string name="show_translate_button_title">Show translate button</string>
+    <string name="show_translate_button_summary">Show the 🌍 translate button in the top bar</string>
+    <string name="show_ai_button_title">Show AI correction button</string>
+    <string name="show_ai_button_summary">Show the ✨ AI button in the top bar</string>
+    <string name="keyboard_background_title">Keyboard background image</string>
+    <string name="keyboard_background_summary">Tap to choose an image</string>
+    <string name="keyboard_background_set">✓ Background image set</string>
+    <string name="clear_keyboard_background_title">Clear background image</string>
+
     <string name="cat_languages">Languages</string>
     <string name="languages_title">Enabled languages</string>
     <string name="languages_summary">Choose which keyboard languages are active</string>
@@ -41,6 +66,8 @@
     <string name="ai_built_in_key_missing">No built-in key. Add your own below.</string>
     <string name="ai_user_key_title">Override API key (optional)</string>
     <string name="ai_user_key_summary">Leave empty to use built-in key</string>
+    <string name="phonetic_dict_title">Phonetic dictionary</string>
+    <string name="phonetic_dict_summary">Word mappings for fixing your common mispronunciations or misspellings (one per line, format: wrong=right). Example: Klod=Claude</string>
 
     <string name="cat_about">About</string>
     <string name="about_version_title">Version</string>
@@ -48,4 +75,56 @@
     <string name="about_license_title">License</string>
     <string name="about_license_summary">GNU AGPLv3</string>
     <string name="about_github_title">GitHub</string>
+
+    <string name="clipboard_panel_title">📋 Clipboard</string>
+    <string name="clipboard_clear">🗑 Clear history</string>
+    <string name="clipboard_pinned">📌 Pinned</string>
+    <string name="clipboard_history">🕒 History</string>
+    <string name="clipboard_empty">Clipboard is empty.\nWhen you copy something it will appear here.</string>
+
+    <string name="ai_no_text">No text to translate</string>
+    <string name="ai_not_configured">AI is not configured</string>
+    <string name="ai_translating">✨ Translating…</string>
+    <string name="ai_correcting">✨ Correcting…</string>
+    <string name="ai_translation_error">Translation error: %1$s</string>
+    <string name="ai_correction_error">Correction error: %1$s</string>
+
+    <string name="theme_entry_light">Light</string>
+    <string name="theme_entry_dark">Dark</string>
+    <string name="theme_entry_system">System</string>
+
+    <string name="key_sound_off">Off</string>
+    <string name="key_sound_system">System click</string>
+    <string name="key_sound_tone">Tone</string>
+    <string name="key_sound_spacebar">Space-bar tap</string>
+
+    <string name="kb_height_small">Small</string>
+    <string name="kb_height_normal">Normal</string>
+    <string name="kb_height_large">Large</string>
+    <string name="kb_height_xlarge">Extra large</string>
+
+    <string name="ai_model_auto">Auto (Recommended — Free Router)</string>
+    <string name="ai_model_deepseek_v3">DeepSeek V3</string>
+    <string name="ai_model_deepseek_r1">DeepSeek R1</string>
+    <string name="ai_model_qwen3_coder">Qwen3 Coder 480B</string>
+    <string name="ai_model_llama_70b">Llama 3.3 70B</string>
+    <string name="ai_model_gemini_flash">Gemini 2.0 Flash</string>
+    <string name="ai_model_mistral_small">Mistral Small 3.1 24B</string>
+
+    <string name="ai_lang_english">English</string>
+    <string name="ai_lang_turkish">Turkish</string>
+    <string name="ai_lang_german">German</string>
+    <string name="ai_lang_french">French</string>
+    <string name="ai_lang_spanish">Spanish</string>
+    <string name="ai_lang_russian">Russian</string>
+    <string name="ai_lang_arabic">Arabic</string>
+    <string name="ai_lang_japanese">Japanese</string>
+
+    <string name="haptic_intensity_off">Off</string>
+    <string name="haptic_intensity_light">Light</string>
+    <string name="haptic_intensity_medium">Medium</string>
+    <string name="haptic_intensity_strong">Strong</string>
+
+    <string name="voice_permission_required">Microphone permission required — grant it in Settings</string>
+    <string name="voice_error">Voice input error (%1$d)</string>
 </resources>

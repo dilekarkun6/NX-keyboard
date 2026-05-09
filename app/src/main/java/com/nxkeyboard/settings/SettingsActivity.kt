@@ -85,7 +85,7 @@ class SettingsActivity : AppCompatActivity() {
                     PreferenceManager.getDefaultSharedPreferences(ctx).edit()
                         .putString("keyboard_background_uri", uri.toString())
                         .apply()
-                    findPreference<Preference>("keyboard_background")?.summary = "✓ Arkaplan ayarlandı"
+                    findPreference<Preference>("keyboard_background")?.summary = getString(R.string.keyboard_background_set)
                 }
             }
         }
@@ -134,7 +134,7 @@ class SettingsActivity : AppCompatActivity() {
             findPreference<Preference>("keyboard_background")?.let { pref ->
                 val uri = PreferenceManager.getDefaultSharedPreferences(requireContext())
                     .getString("keyboard_background_uri", "")
-                pref.summary = if (uri.isNullOrBlank()) "Resim seçmek için dokunun" else "✓ Arkaplan ayarlandı"
+                pref.summary = if (uri.isNullOrBlank()) getString(R.string.keyboard_background_summary) else getString(R.string.keyboard_background_set)
                 pref.setOnPreferenceClickListener {
                     imagePicker.launch(arrayOf("image/*"))
                     true
@@ -145,7 +145,7 @@ class SettingsActivity : AppCompatActivity() {
                 PreferenceManager.getDefaultSharedPreferences(requireContext()).edit()
                     .remove("keyboard_background_uri")
                     .apply()
-                findPreference<Preference>("keyboard_background")?.summary = "Resim seçmek için dokunun"
+                findPreference<Preference>("keyboard_background")?.summary = getString(R.string.keyboard_background_summary)
                 true
             }
 

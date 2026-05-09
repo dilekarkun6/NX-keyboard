@@ -12,9 +12,9 @@ import androidx.core.content.ContextCompat
 
 class VoiceInputManager(
     private val context: Context,
-    private val onResult: (String) -> Unit,
-    private val onError: (Int) -> Unit,
-    private val onPartial: (String) -> Unit = {}
+    private val resultCallback: (String) -> Unit,
+    private val errorCallback: (Int) -> Unit,
+    private val partialCallback: (String) -> Unit = {}
 ) {
     private var recognizer: SpeechRecognizer? = null
     private var isListening = false
@@ -27,11 +27,11 @@ class VoiceInputManager(
 
     fun start(locale: String) {
         if (!hasPermission()) {
-            onError(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS)
+            errorCallback(SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS)
             return
         }
         if (!SpeechRecognizer.isRecognitionAvailable(context)) {
-            onError(SpeechRecognizer.ERROR_CLIENT)
+            errorCallback(SpeechRecognizer.ERROR_CLIENT)
             return
         }
         stop()
@@ -41,16 +41,16 @@ class VoiceInputManager(
                     val text = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                         ?.firstOrNull() ?: ""
                     isListening = false
-                    if (text.isNotEmpty()) onResult(text)
+                    if (text.isNotEmpty()) resultCallback(text)
                 }
                 override fun onError(error: Int) {
                     isListening = false
-                    onError(error)
+                    errorCallback(error)
                 }
                 override fun onPartialResults(partialResults: Bundle) {
                     val text = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                         ?.firstOrNull() ?: ""
-                    if (text.isNotEmpty()) onPartial(text)
+                    if (text.isNotEmpty()) partialCallback(text)
                 }
                 override fun onReadyForSpeech(params: Bundle?) {}
                 override fun onBeginningOfSpeech() {}

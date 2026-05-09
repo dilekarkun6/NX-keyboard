@@ -27,61 +27,68 @@
             app:summary="@string/haptic_summary"
             app:defaultValue="true" />
         <ListPreference
+            app:key="haptic_intensity"
+            app:title="@string/haptic_intensity_title"
+            app:summary="@string/haptic_intensity_summary"
+            app:entries="@array/haptic_intensity_entries"
+            app:entryValues="@array/haptic_intensity_values"
+            app:defaultValue="2" />
+        <ListPreference
             app:key="key_sound"
-            app:title="Tuş sesi"
-            app:summary="Tuşa basıldığında çalınan ses"
+            app:title="@string/key_sound_title"
+            app:summary="@string/key_sound_summary"
             app:entries="@array/key_sound_entries"
             app:entryValues="@array/key_sound_values"
             app:defaultValue="off" />
         <ListPreference
             app:key="keyboard_height"
-            app:title="Klavye boyutu"
-            app:summary="Tuşların yüksekliği"
+            app:title="@string/keyboard_height_title"
+            app:summary="@string/keyboard_height_summary"
             app:entries="@array/keyboard_height_entries"
             app:entryValues="@array/keyboard_height_values"
             app:defaultValue="1.15" />
         <SwitchPreferenceCompat
             app:key="show_top_bar"
-            app:title="Üst bar"
-            app:summary="Klavyenin üzerinde geri al / AI / pano / emoji çubuğunu göster"
+            app:title="@string/show_top_bar_title"
+            app:summary="@string/show_top_bar_summary"
             app:defaultValue="true" />
         <SwitchPreferenceCompat
             app:key="show_undo_redo"
-            app:title="Geri al / İleri al butonları"
-            app:summary="Üst barda ↶ ↷ butonlarını göster"
+            app:title="@string/show_undo_redo_title"
+            app:summary="@string/show_undo_redo_summary"
             app:defaultValue="true" />
         <SwitchPreferenceCompat
             app:key="long_press_popup"
-            app:title="Uzun basınca alternatif karakter"
-            app:summary="Bir tuşa uzun basınca aksanlı/farklı varyantlarını göster (örn. p → π)"
+            app:title="@string/long_press_popup_title"
+            app:summary="@string/long_press_popup_summary"
             app:defaultValue="true" />
         <SwitchPreferenceCompat
             app:key="hold_repeat"
-            app:title="Tuşa basılı tutunca tekrarla"
-            app:summary="Boşluk dahil herhangi bir tuşa basılı tutunca yazma sürsün"
+            app:title="@string/hold_repeat_title"
+            app:summary="@string/hold_repeat_summary"
             app:defaultValue="true" />
         <SwitchPreferenceCompat
             app:key="double_space_period"
-            app:title="Çift boşlukla nokta"
-            app:summary="İki kez boşluk basıldığında otomatik olarak nokta + boşluk yazsın"
+            app:title="@string/double_space_period_title"
+            app:summary="@string/double_space_period_summary"
             app:defaultValue="false" />
         <SwitchPreferenceCompat
             app:key="show_translate_button"
-            app:title="Çeviri butonunu göster"
-            app:summary="Üst barda 🌍 çeviri butonunu göster"
+            app:title="@string/show_translate_button_title"
+            app:summary="@string/show_translate_button_summary"
             app:defaultValue="false" />
         <SwitchPreferenceCompat
             app:key="show_ai_button"
-            app:title="AI düzeltme butonunu göster"
-            app:summary="Üst barda ✨ AI butonunu göster"
+            app:title="@string/show_ai_button_title"
+            app:summary="@string/show_ai_button_summary"
             app:defaultValue="true" />
         <Preference
             app:key="keyboard_background"
-            app:title="Klavye arkaplan resmi"
-            app:summary="Resim seçmek için dokunun" />
+            app:title="@string/keyboard_background_title"
+            app:summary="@string/keyboard_background_summary" />
         <Preference
             app:key="clear_keyboard_background"
-            app:title="Arkaplan resmini temizle" />
+            app:title="@string/clear_keyboard_background_title" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/cat_languages">
@@ -138,18 +145,8 @@
             app:summary="@string/ai_user_key_summary" />
         <EditTextPreference
             app:key="phonetic_dict"
-            app:title="Fonetik sözlük"
-            app:summary="Yanlış telaffuzu doğru hale getirmek için kelime eşlemeleri (Klod=Claude, Konyıl=Hyundai). Her satıra bir tane &quot;yanlış=doğru&quot; yaz." />
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="Hata kaydı">
-        <Preference
-            app:key="share_error_log"
-            app:title="Hatayı paylaş"
-            app:summary="Henüz kayıtlı hata yok" />
-        <Preference
-            app:key="clear_error_log"
-            app:title="Hata kaydını temizle" />
+            app:title="@string/phonetic_dict_title"
+            app:summary="@string/phonetic_dict_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/cat_about">

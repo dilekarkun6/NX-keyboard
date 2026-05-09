@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="theme_entries">
-        <item>Açık</item>
-        <item>Koyu</item>
-        <item>Sistem</item>
+        <item>@string/theme_entry_light</item>
+        <item>@string/theme_entry_dark</item>
+        <item>@string/theme_entry_system</item>
     </string-array>
     <string-array name="theme_values">
         <item>light</item>
@@ -12,13 +12,13 @@
     </string-array>
 
     <string-array name="ai_model_entries">
-        <item>Otomatik (Önerilen — Free Router)</item>
-        <item>DeepSeek V3</item>
-        <item>DeepSeek R1</item>
-        <item>Qwen3 Coder 480B</item>
-        <item>Llama 3.3 70B</item>
-        <item>Gemini 2.0 Flash</item>
-        <item>Mistral Small 3.1 24B</item>
+        <item>@string/ai_model_auto</item>
+        <item>@string/ai_model_deepseek_v3</item>
+        <item>@string/ai_model_deepseek_r1</item>
+        <item>@string/ai_model_qwen3_coder</item>
+        <item>@string/ai_model_llama_70b</item>
+        <item>@string/ai_model_gemini_flash</item>
+        <item>@string/ai_model_mistral_small</item>
     </string-array>
     <string-array name="ai_model_values">
         <item>openrouter/free</item>
@@ -31,14 +31,14 @@
     </string-array>
 
     <string-array name="ai_target_lang_entries">
-        <item>İngilizce</item>
-        <item>Türkçe</item>
-        <item>Almanca</item>
-        <item>Fransızca</item>
-        <item>İspanyolca</item>
-        <item>Rusça</item>
-        <item>Arapça</item>
-        <item>Japonca</item>
+        <item>@string/ai_lang_english</item>
+        <item>@string/ai_lang_turkish</item>
+        <item>@string/ai_lang_german</item>
+        <item>@string/ai_lang_french</item>
+        <item>@string/ai_lang_spanish</item>
+        <item>@string/ai_lang_russian</item>
+        <item>@string/ai_lang_arabic</item>
+        <item>@string/ai_lang_japanese</item>
     </string-array>
     <string-array name="ai_target_lang_values">
         <item>English</item>
@@ -52,10 +52,10 @@
     </string-array>
 
     <string-array name="keyboard_height_entries">
-        <item>Küçük</item>
-        <item>Normal</item>
-        <item>Büyük</item>
-        <item>Çok Büyük</item>
+        <item>@string/kb_height_small</item>
+        <item>@string/kb_height_normal</item>
+        <item>@string/kb_height_large</item>
+        <item>@string/kb_height_xlarge</item>
     </string-array>
     <string-array name="keyboard_height_values">
         <item>0.85</item>
@@ -65,15 +65,28 @@
     </string-array>
 
     <string-array name="key_sound_entries">
-        <item>Kapalı</item>
-        <item>Sistem Tıklaması</item>
-        <item>Ton Sesi</item>
-        <item>Uzay Tuş Sesi</item>
+        <item>@string/key_sound_off</item>
+        <item>@string/key_sound_system</item>
+        <item>@string/key_sound_tone</item>
+        <item>@string/key_sound_spacebar</item>
     </string-array>
     <string-array name="key_sound_values">
         <item>off</item>
         <item>system</item>
         <item>tone</item>
         <item>spacebar</item>
+    </string-array>
+
+    <string-array name="haptic_intensity_entries">
+        <item>@string/haptic_intensity_off</item>
+        <item>@string/haptic_intensity_light</item>
+        <item>@string/haptic_intensity_medium</item>
+        <item>@string/haptic_intensity_strong</item>
+    </string-array>
+    <string-array name="haptic_intensity_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>

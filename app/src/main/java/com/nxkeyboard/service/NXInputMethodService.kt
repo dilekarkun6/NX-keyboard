@@ -1,5 +1,7 @@
 package com.nxkeyboard.service
 
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.inputmethodservice.InputMethodService
 import android.net.Uri
@@ -10,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.Toast
+import com.nxkeyboard.R
 import com.nxkeyboard.ai.AIManager
 import com.nxkeyboard.keyboard.ClipboardPanel
 import com.nxkeyboard.keyboard.EmojiKeyboardView
@@ -51,6 +54,20 @@ class NXInputMethodService : InputMethodService() {
         CoroutineScope(Dispatchers.Main + SupervisorJob())
     }
 
+    private val clipboardListener = ClipboardManager.OnPrimaryClipChangedListener {
+        try {
+            val cb = getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            val item = cb?.primaryClip?.getItemAt(0)
+            val text = item?.coerceToText(this)?.toString().orEmpty()
+            if (text.isNotBlank()) {
+                ClipboardHelper.addToHistory(this, text)
+                if (::clipboardPanel.isInitialized && clipboardVisible) {
+                    clipboardPanel.refresh()
+                }
+            }
+        } catch (_: Throwable) {}
+    }
+
     override fun onCreate() {
         super.onCreate()
         CrashLogger.install(this)
@@ -59,9 +76,23 @@ class NXInputMethodService : InputMethodService() {
         aiManager = AIManager(this)
         voiceInputManager = VoiceInputManager(
             context = this,
-            onResult = { text -> commitText(text + " ") },
-            onError = { code -> showVoiceError(code) }
+            resultCallback = { text -> commitText(text + " ") },
+            errorCallback = { code -> showVoiceError(code) }
         )
+        try {
+            (getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager)
+                ?.addPrimaryClipChangedListener(clipboardListener)
+        } catch (_: Throwable) {}
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        voiceInputManager.stop()
+        try {
+            (getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager)
+                ?.removePrimaryClipChangedListener(clipboardListener)
+        } catch (_: Throwable) {}
+        coroutineScope.cancel()
     }
 
     override fun onCreateInputView(): View {
@@ -177,12 +208,6 @@ class NXInputMethodService : InputMethodService() {
         closeEmojiPanel()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        voiceInputManager.stop()
-        coroutineScope.cancel()
-    }
-
     fun getLanguageManager(): LanguageManager = languageManager
     fun getThemeManager(): ThemeManager = themeManager
 
@@ -279,7 +304,7 @@ class NXInputMethodService : InputMethodService() {
 
     fun startVoiceInput() {
         if (!voiceInputManager.hasPermission()) {
-            Toast.makeText(this, "Mikrofon izni gerekli — Ayarlardan verin", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.voice_permission_required), Toast.LENGTH_LONG).show()
             try {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                     data = Uri.parse("package:$packageName")
@@ -290,7 +315,7 @@ class NXInputMethodService : InputMethodService() {
             return
         }
         voiceInputManager.start(languageManager.currentLocale)
-        Toast.makeText(this, "🎤 Konuşun…", Toast.LENGTH_SHORT).show()
+        
     }
 
     private fun showVoiceError(code: Int) {
@@ -315,14 +340,14 @@ class NXInputMethodService : InputMethodService() {
             selected
         }
         if (context.isBlank()) {
-            Toast.makeText(this, "Düzeltilecek metin yok", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.ai_no_text), Toast.LENGTH_SHORT).show()
             return
         }
         if (!aiManager.isConfigured()) {
-            Toast.makeText(this, "AI yapılandırılmamış", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.ai_not_configured), Toast.LENGTH_SHORT).show()
             return
         }
-        Toast.makeText(this, "✨ AI çalışıyor…", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.ai_correcting), Toast.LENGTH_SHORT).show()
         val locale = languageManager.currentLocale
         coroutineScope.launch {
             val result = aiManager.correct(context, languageManager.displayNameOf(locale))
@@ -335,7 +360,7 @@ class NXInputMethodService : InputMethodService() {
                 }
             }.onFailure { error ->
                 CrashLogger.logNonFatal(this@NXInputMethodService, "AIManager.correct", error)
-                Toast.makeText(this@NXInputMethodService, "AI hatası: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@NXInputMethodService, getString(R.string.ai_correction_error, error.message ?: ""), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -349,14 +374,14 @@ class NXInputMethodService : InputMethodService() {
             selected
         }
         if (source.isBlank()) {
-            Toast.makeText(this, "Çevirilecek metin yok", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.ai_no_text), Toast.LENGTH_SHORT).show()
             return
         }
         if (!aiManager.isConfigured()) {
-            Toast.makeText(this, "AI yapılandırılmamış", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.ai_not_configured), Toast.LENGTH_SHORT).show()
             return
         }
-        Toast.makeText(this, "✨ Çeviriliyor…", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.ai_translating), Toast.LENGTH_SHORT).show()
         coroutineScope.launch {
             val result = aiManager.translate(source, targetLang)
             result.onSuccess { translated ->
@@ -368,7 +393,7 @@ class NXInputMethodService : InputMethodService() {
                 }
             }.onFailure { error ->
                 CrashLogger.logNonFatal(this@NXInputMethodService, "AIManager.translate", error)
-                Toast.makeText(this@NXInputMethodService, "Çeviri hatası: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@NXInputMethodService, getString(R.string.ai_translation_error, error.message ?: ""), Toast.LENGTH_SHORT).show()
             }
         }
     }

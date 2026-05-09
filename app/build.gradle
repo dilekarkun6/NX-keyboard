@@ -20,6 +20,12 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
         release {
             if (System.getenv("KEYSTORE_FILE") != null) {
                 storeFile file(System.getenv("KEYSTORE_FILE"))
@@ -32,9 +38,8 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix "-debug"
             minifyEnabled false
+            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
@@ -42,6 +47,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (System.getenv("KEYSTORE_FILE") != null) {
                 signingConfig signingConfigs.release
+            } else {
+                signingConfig signingConfigs.debug
             }
         }
     }
