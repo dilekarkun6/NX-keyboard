@@ -384,7 +384,7 @@ class NXKeyboardView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 cancelRepeatingDelete()
                 cancelCharacterRepeat()
-                cancelLongPress()
+                cancelLongPressTimer()
                 if (popupActive && popupSelectedIndex in popupOptions.indices) {
                     val service = imeService
                     if (service != null) {
@@ -405,7 +405,7 @@ class NXKeyboardView @JvmOverloads constructor(
             MotionEvent.ACTION_CANCEL -> {
                 cancelRepeatingDelete()
                 cancelCharacterRepeat()
-                cancelLongPress()
+                cancelLongPressTimer()
                 dismissPopup()
                 pressedRect = null
                 pressedKey = null
@@ -420,7 +420,7 @@ class NXKeyboardView @JvmOverloads constructor(
                 }
                 val target = keyRects.firstOrNull { it.rect.contains(x, y) }
                 if (target?.rect != pressedRect?.rect) {
-                    cancelLongPress()
+                    cancelLongPressTimer()
                     cancelCharacterRepeat()
                     pressedRect = target
                     pressedKey = target?.key
@@ -436,7 +436,7 @@ class NXKeyboardView @JvmOverloads constructor(
     }
 
     private fun scheduleLongPress(target: KeyRect) {
-        cancelLongPress()
+        cancelLongPressTimer()
         val ctx = context
         val popupEnabled = PrefsHelper.getBoolean(ctx, "long_press_popup", true)
         val holdRepeatEnabled = PrefsHelper.getBoolean(ctx, "hold_repeat", true)
@@ -457,7 +457,7 @@ class NXKeyboardView @JvmOverloads constructor(
         handler.postDelayed(longPressRunnable!!, 380)
     }
 
-    private fun cancelLongPress() {
+    private fun cancelLongPressTimer() {
         longPressRunnable?.let { handler.removeCallbacks(it) }
         longPressRunnable = null
     }
