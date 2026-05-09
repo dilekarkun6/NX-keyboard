@@ -127,8 +127,9 @@ class NXKeyboardView @JvmOverloads constructor(
                 val options = BitmapFactory.Options().apply { inSampleSize = 2 }
                 backgroundBitmap = BitmapFactory.decodeStream(stream, null, options)
             }
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
             backgroundBitmap = null
+            com.nxkeyboard.utils.CrashLogger.logNonFatal(context, "NXKeyboardView.loadBackground", t)
         }
     }
 

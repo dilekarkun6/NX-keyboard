@@ -23,6 +23,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var themeListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        com.nxkeyboard.utils.CrashLogger.install(this)
         applyThemeFromPrefs()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -150,6 +151,53 @@ class SettingsActivity : AppCompatActivity() {
 
             findPreference<Preference>("about_version")?.summary =
                 getString(R.string.about_version_summary, "1.0.0")
+
+            updateErrorLogSummary()
+
+            findPreference<Preference>("share_error_log")?.setOnPreferenceClickListener {
+                shareErrorLog()
+                true
+            }
+
+            findPreference<Preference>("clear_error_log")?.setOnPreferenceClickListener {
+                com.nxkeyboard.utils.CrashLogger.clear(requireContext())
+                updateErrorLogSummary()
+                true
+            }
+        }
+
+        private fun updateErrorLogSummary() {
+            val ctx = requireContext()
+            val pref = findPreference<Preference>("share_error_log") ?: return
+            if (com.nxkeyboard.utils.CrashLogger.hasLog(ctx)) {
+                val size = com.nxkeyboard.utils.CrashLogger.getLogFile(ctx).length()
+                pref.summary = "Hata kaydı mevcut (${size} bayt). Geliştirici ile paylaşmak için dokun"
+            } else {
+                pref.summary = "Henüz kayıtlı hata yok"
+            }
+        }
+
+        private fun shareErrorLog() {
+            val ctx = requireContext()
+            if (!com.nxkeyboard.utils.CrashLogger.hasLog(ctx)) {
+                android.widget.Toast.makeText(ctx, "Henüz kayıtlı hata yok", android.widget.Toast.LENGTH_SHORT).show()
+                return
+            }
+            try {
+                val file = com.nxkeyboard.utils.CrashLogger.getLogFile(ctx)
+                val authority = "${ctx.packageName}.fileprovider"
+                val uri = androidx.core.content.FileProvider.getUriForFile(ctx, authority, file)
+                val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    putExtra(Intent.EXTRA_SUBJECT, "NX Keyboard error log")
+                    putExtra(Intent.EXTRA_TEXT, "THIS IS THE ERROR — please give this to the developer to fix it")
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                startActivity(Intent.createChooser(sendIntent, "Hatayı paylaş"))
+            } catch (t: Throwable) {
+                android.widget.Toast.makeText(ctx, "Paylaşım hatası: ${t.message}", android.widget.Toast.LENGTH_LONG).show()
+            }
         }
 
         private fun localeDisplayName(locale: String): String = when (locale) {

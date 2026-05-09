@@ -142,6 +142,16 @@
             app:summary="Yanlış telaffuzu doğru hale getirmek için kelime eşlemeleri (Klod=Claude, Konyıl=Hyundai). Her satıra bir tane &quot;yanlış=doğru&quot; yaz." />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Hata kaydı">
+        <Preference
+            app:key="share_error_log"
+            app:title="Hatayı paylaş"
+            app:summary="Henüz kayıtlı hata yok" />
+        <Preference
+            app:key="clear_error_log"
+            app:title="Hata kaydını temizle" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/cat_about">
         <Preference
             app:key="about_version"

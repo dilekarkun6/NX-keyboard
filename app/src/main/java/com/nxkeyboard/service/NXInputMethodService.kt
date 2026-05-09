@@ -20,6 +20,7 @@ import com.nxkeyboard.language.LanguageManager
 import com.nxkeyboard.settings.SettingsActivity
 import com.nxkeyboard.theme.ThemeManager
 import com.nxkeyboard.utils.ClipboardHelper
+import com.nxkeyboard.utils.CrashLogger
 import com.nxkeyboard.utils.PrefsHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +53,7 @@ class NXInputMethodService : InputMethodService() {
 
     override fun onCreate() {
         super.onCreate()
+        CrashLogger.install(this)
         languageManager = LanguageManager(this)
         themeManager = ThemeManager(this)
         aiManager = AIManager(this)
@@ -332,6 +334,7 @@ class NXInputMethodService : InputMethodService() {
                     ic.commitText(corrected, 1)
                 }
             }.onFailure { error ->
+                CrashLogger.logNonFatal(this@NXInputMethodService, "AIManager.correct", error)
                 Toast.makeText(this@NXInputMethodService, "AI hatası: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -364,6 +367,7 @@ class NXInputMethodService : InputMethodService() {
                     ic.commitText(translated, 1)
                 }
             }.onFailure { error ->
+                CrashLogger.logNonFatal(this@NXInputMethodService, "AIManager.translate", error)
                 Toast.makeText(this@NXInputMethodService, "Çeviri hatası: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         }
