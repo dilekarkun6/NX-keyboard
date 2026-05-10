@@ -22,7 +22,7 @@
         <Key codes="106" keyLabel="j" keyWidth="10" />
         <Key codes="107" keyLabel="k" keyWidth="10" />
         <Key codes="108" keyLabel="l" keyWidth="10" />
-        <Key codes="39"  keyLabel="&apos;" popupCharacters="&quot;`" keyWidth="10" />
+        <Key codes="39"  keyLabel="&apos;" popupCharacters="`" keyWidth="10" />
     </Row>
     <Row>
         <Key codes="-1"  keyLabel="⇧" keyWidth="15" />
