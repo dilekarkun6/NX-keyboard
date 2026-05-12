@@ -267,15 +267,51 @@ class NXInputMethodService : InputMethodService() {
     }
 
     fun sendEnter() {
+        val ic = currentInputConnection ?: return
         val info = currentInputEditorInfo
+        val inputType = info.inputType
+        val isMultiLine = (inputType and android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0
+            || (inputType and android.text.InputType.TYPE_TEXT_FLAG_IME_MULTI_LINE) != 0
+        val variation = inputType and android.text.InputType.TYPE_MASK_VARIATION
+        val isNullInput = (inputType and android.text.InputType.TYPE_MASK_CLASS) == android.text.InputType.TYPE_NULL
+        val noEnterAction = (info.imeOptions and EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0
         val imeAction = info.imeOptions and EditorInfo.IME_MASK_ACTION
-        when (imeAction) {
-            EditorInfo.IME_ACTION_SEARCH,
-            EditorInfo.IME_ACTION_GO,
-            EditorInfo.IME_ACTION_SEND,
-            EditorInfo.IME_ACTION_NEXT,
-            EditorInfo.IME_ACTION_DONE -> sendDefaultEditorAction(true)
-            else -> currentInputConnection?.commitText("\n", 1)
+
+        if (isMultiLine || isNullInput || variation == android.text.InputType.TYPE_TEXT_VARIATION_LONG_MESSAGE) {
+            sendNewlineEvent(ic)
+            return
+        }
+        if (noEnterAction || imeAction == EditorInfo.IME_ACTION_NONE || imeAction == EditorInfo.IME_ACTION_UNSPECIFIED) {
+            sendNewlineEvent(ic)
+            return
+        }
+        if (!sendDefaultEditorAction(true)) {
+            sendNewlineEvent(ic)
+        }
+    }
+
+    private fun sendNewlineEvent(ic: android.view.inputmethod.InputConnection) {
+        val now = android.os.SystemClock.uptimeMillis()
+        val flags = android.view.KeyEvent.FLAG_SOFT_KEYBOARD or android.view.KeyEvent.FLAG_KEEP_TOUCH_MODE
+        val down = android.view.KeyEvent(
+            now, now,
+            android.view.KeyEvent.ACTION_DOWN,
+            android.view.KeyEvent.KEYCODE_ENTER,
+            0, 0,
+            android.view.KeyCharacterMap.VIRTUAL_KEYBOARD,
+            0, flags
+        )
+        val up = android.view.KeyEvent(
+            now, now,
+            android.view.KeyEvent.ACTION_UP,
+            android.view.KeyEvent.KEYCODE_ENTER,
+            0, 0,
+            android.view.KeyCharacterMap.VIRTUAL_KEYBOARD,
+            0, flags
+        )
+        val ok = ic.sendKeyEvent(down) && ic.sendKeyEvent(up)
+        if (!ok) {
+            ic.commitText("\n", 1)
         }
     }
 

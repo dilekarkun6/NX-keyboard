@@ -100,6 +100,7 @@ object KeyboardLayoutManager {
     const val CODE_SYMBOLS = -3
     const val CODE_LETTERS = -4
     const val CODE_BACKSPACE = -5
+    const val CODE_SYMBOLS_2 = -6
     const val CODE_LANGUAGE = -10
     const val CODE_VOICE = -11
     const val CODE_CLIPBOARD = -12

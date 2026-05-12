@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android">
+    <Row>
+        <Key codes="126" keyLabel="~" keyWidth="10" />
+        <Key codes="96"  keyLabel="`" keyWidth="10" />
+        <Key codes="124" keyLabel="|" keyWidth="10" />
+        <Key codes="8226" keyLabel="•" keyWidth="10" />
+        <Key codes="8730" keyLabel="√" keyWidth="10" />
+        <Key codes="960" keyLabel="π" keyWidth="10" />
+        <Key codes="247" keyLabel="÷" keyWidth="10" />
+        <Key codes="215" keyLabel="×" keyWidth="10" />
+        <Key codes="167" keyLabel="§" keyWidth="10" />
+        <Key codes="8710" keyLabel="∆" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="163" keyLabel="£" keyWidth="10" />
+        <Key codes="8364" keyLabel="€" keyWidth="10" />
+        <Key codes="162" keyLabel="¢" keyWidth="10" />
+        <Key codes="8377" keyLabel="₹" keyWidth="10" />
+        <Key codes="165" keyLabel="¥" keyWidth="10" />
+        <Key codes="8369" keyLabel="₱" keyWidth="10" />
+        <Key codes="8378" keyLabel="₺" keyWidth="10" />
+        <Key codes="94"  keyLabel="^" keyWidth="10" />
+        <Key codes="176" keyLabel="°" keyWidth="10" />
+        <Key codes="61"  keyLabel="=" keyWidth="10" />
+    </Row>
+    <Row>
+        <Key codes="-3"  keyLabel="2/2" keyWidth="14" />
+        <Key codes="91"  keyLabel="[" keyWidth="9" />
+        <Key codes="93"  keyLabel="]" keyWidth="9" />
+        <Key codes="123" keyLabel="{" keyWidth="9" />
+        <Key codes="125" keyLabel="}" keyWidth="9" />
+        <Key codes="60"  keyLabel="&lt;" keyWidth="9" />
+        <Key codes="62"  keyLabel="&gt;" keyWidth="9" />
+        <Key codes="92"  keyLabel="\" keyWidth="9" />
+        <Key codes="10003" keyLabel="✓" keyWidth="9" />
+        <Key codes="-5"  keyLabel="⌫" keyWidth="14" />
+    </Row>
+    <Row>
+        <Key codes="-4"  keyLabel="ABC" keyWidth="14" />
+        <Key codes="-2"  keyLabel="😀" keyWidth="11" />
+        <Key codes="8592" keyLabel="←" keyWidth="9" />
+        <Key codes="32"  keyLabel="space" keyWidth="24" />
+        <Key codes="8594" keyLabel="→" keyWidth="9" />
+        <Key codes="8593" keyLabel="↑" keyWidth="9" />
+        <Key codes="8595" keyLabel="↓" keyWidth="9" />
+        <Key codes="10"  keyLabel="⏎" keyWidth="15" />
+    </Row>
+</Keyboard>

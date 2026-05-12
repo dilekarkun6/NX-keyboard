@@ -15,6 +15,14 @@
     <string name="app_lang_system">Sistemi takip et</string>
     <string name="app_lang_en">English (İngilizce)</string>
     <string name="app_lang_tr">Türkçe</string>
+    <string name="app_lang_az">Azərbaycanca (Azerice)</string>
+    <string name="app_lang_de">Deutsch (Almanca)</string>
+    <string name="app_lang_fr">Français (Fransızca)</string>
+    <string name="app_lang_es">Español (İspanyolca)</string>
+    <string name="app_lang_ru">Русский (Rusça)</string>
+    <string name="app_lang_ar">العربية (Arapça)</string>
+    <string name="app_lang_ja">日本語 (Japonca)</string>
+    <string name="app_lang_hi">हिन्दी (Hintçe)</string>
     <string name="theme_title">Tema</string>
     <string name="theme_summary">Açık, koyu veya sistemi takip et</string>
     <string name="haptic_title">Titreşim geri bildirimi</string>

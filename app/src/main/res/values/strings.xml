@@ -15,6 +15,14 @@
     <string name="app_lang_system">Follow system</string>
     <string name="app_lang_en">English</string>
     <string name="app_lang_tr">Türkçe (Turkish)</string>
+    <string name="app_lang_az">Azərbaycanca</string>
+    <string name="app_lang_de">Deutsch (German)</string>
+    <string name="app_lang_fr">Français (French)</string>
+    <string name="app_lang_es">Español (Spanish)</string>
+    <string name="app_lang_ru">Русский (Russian)</string>
+    <string name="app_lang_ar">العربية (Arabic)</string>
+    <string name="app_lang_ja">日本語 (Japanese)</string>
+    <string name="app_lang_hi">हिन्दी (Hindi)</string>
     <string name="theme_title">Theme</string>
     <string name="theme_summary">Light, Dark or follow system</string>
     <string name="haptic_title">Haptic feedback</string>

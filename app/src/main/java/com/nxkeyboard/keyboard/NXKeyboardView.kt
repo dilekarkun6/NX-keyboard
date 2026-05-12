@@ -63,6 +63,7 @@ class NXKeyboardView @JvmOverloads constructor(
     private var isShifted = false
     private var isCapsLocked = false
     private var isSymbolMode = false
+    private var symbolPage = 1
     private var pressedKey: Key? = null
     private var pressedRect: KeyRect? = null
     private var lastShiftClickTime = 0L
@@ -106,7 +107,7 @@ class NXKeyboardView @JvmOverloads constructor(
 
     fun applySettings() {
         val ctx = context
-        val scaleStr = PrefsHelper.getString(ctx, "keyboard_height", "1.15")
+        val scaleStr = PrefsHelper.getString(ctx, "keyboard_height", "1.0")
         val scale = scaleStr.toFloatOrNull() ?: 1.15f
         rowHeight = dp(56f) * scale.coerceIn(0.7f, 1.6f)
         loadBackgroundImage()
@@ -212,8 +213,11 @@ class NXKeyboardView @JvmOverloads constructor(
     fun reloadLayout() {
         val lang = languageManager ?: return
         val locale = lang.currentLocale
-        val resourceId = if (isSymbolMode) R.xml.keyboard_symbols
-            else lang.getLayoutResourceForLocale(locale)
+        val resourceId = when {
+            isSymbolMode && symbolPage == 2 -> R.xml.keyboard_symbols_2
+            isSymbolMode -> R.xml.keyboard_symbols
+            else -> lang.getLayoutResourceForLocale(locale)
+        }
         val rtl = !isSymbolMode && lang.isRTL(locale)
         layout = KeyboardLayoutManager.load(context, resourceId, locale, rtl)
         layoutDirection = if (rtl) LAYOUT_DIRECTION_RTL else LAYOUT_DIRECTION_LTR
@@ -584,16 +588,24 @@ class NXKeyboardView @JvmOverloads constructor(
             KeyboardLayoutManager.CODE_EMOJI -> service.openEmojiKeyboard()
             KeyboardLayoutManager.CODE_SYMBOLS -> {
                 isSymbolMode = true
+                symbolPage = 1
+                reloadLayout()
+            }
+            KeyboardLayoutManager.CODE_SYMBOLS_2 -> {
+                isSymbolMode = true
+                symbolPage = 2
                 reloadLayout()
             }
             KeyboardLayoutManager.CODE_LETTERS -> {
                 isSymbolMode = false
+                symbolPage = 1
                 reloadLayout()
             }
             KeyboardLayoutManager.CODE_LANGUAGE -> {
                 service.switchToNextLanguage()
                 isShifted = false
                 isSymbolMode = false
+                symbolPage = 1
                 reloadLayout()
             }
             KeyboardLayoutManager.CODE_VOICE -> service.startVoiceInput()

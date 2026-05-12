@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
+import androidx.emoji2.widget.EmojiTextView
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +54,16 @@ class EmojiKeyboardView @JvmOverloads constructor(
         this.onCloseEmoji = onCloseEmoji
         applyTheme()
         showCategory(EmojiData.Category.SMILEYS)
+        com.nxkeyboard.EmojiCompatState.addListener(emojiReadyListener)
+    }
+
+    private val emojiReadyListener: () -> Unit = {
+        post { (gridRecycler.adapter as? EmojiAdapter)?.notifyDataSetChanged() }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        com.nxkeyboard.EmojiCompatState.removeListener(emojiReadyListener)
     }
 
     private fun setupTabs() {
@@ -67,7 +78,7 @@ class EmojiKeyboardView @JvmOverloads constructor(
         )
 
         for (category in EmojiData.Category.entries) {
-            val tab = TextView(context).apply {
+            val tab = EmojiTextView(context).apply {
                 text = category.icon
                 textSize = 20f
                 gravity = Gravity.CENTER
@@ -153,12 +164,12 @@ class EmojiKeyboardView @JvmOverloads constructor(
         private val onClick: (String) -> Unit
     ) : RecyclerView.Adapter<EmojiAdapter.VH>() {
 
-        class VH(view: TextView) : RecyclerView.ViewHolder(view) {
-            val text: TextView = view
+        class VH(view: EmojiTextView) : RecyclerView.ViewHolder(view) {
+            val text: EmojiTextView = view
         }
 
         override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
-            val tv = TextView(parent.context).apply {
+            val tv = EmojiTextView(parent.context).apply {
                 textSize = 22f
                 gravity = Gravity.CENTER
                 val pad = (8 * resources.displayMetrics.density).toInt()

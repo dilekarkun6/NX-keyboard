@@ -60,7 +60,7 @@
             app:summary="@string/keyboard_height_summary"
             app:entries="@array/keyboard_height_entries"
             app:entryValues="@array/keyboard_height_values"
-            app:defaultValue="1.15" />
+            app:defaultValue="1.0" />
         <SwitchPreferenceCompat
             app:key="show_top_bar"
             app:title="@string/show_top_bar_title"

@@ -4,11 +4,27 @@
         <item>@string/app_lang_system</item>
         <item>@string/app_lang_en</item>
         <item>@string/app_lang_tr</item>
+        <item>@string/app_lang_az</item>
+        <item>@string/app_lang_de</item>
+        <item>@string/app_lang_fr</item>
+        <item>@string/app_lang_es</item>
+        <item>@string/app_lang_ru</item>
+        <item>@string/app_lang_ar</item>
+        <item>@string/app_lang_ja</item>
+        <item>@string/app_lang_hi</item>
     </string-array>
     <string-array name="app_language_values">
         <item>system</item>
         <item>en</item>
         <item>tr</item>
+        <item>az</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>es</item>
+        <item>ru</item>
+        <item>ar</item>
+        <item>ja</item>
+        <item>hi</item>
     </string-array>
 
     <string-array name="theme_entries">
