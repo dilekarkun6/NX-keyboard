@@ -17,6 +17,7 @@ import com.nxkeyboard.ai.AIManager
 import com.nxkeyboard.keyboard.ClipboardPanel
 import com.nxkeyboard.keyboard.EmojiKeyboardView
 import com.nxkeyboard.keyboard.NXKeyboardView
+import com.nxkeyboard.keyboard.SelectionPanel
 import com.nxkeyboard.keyboard.SuggestionBar
 import com.nxkeyboard.keyboard.VoiceInputManager
 import com.nxkeyboard.language.LanguageManager
@@ -45,9 +46,11 @@ class NXInputMethodService : InputMethodService() {
     private lateinit var keyboardView: NXKeyboardView
     private lateinit var emojiKeyboardView: EmojiKeyboardView
     private lateinit var clipboardPanel: ClipboardPanel
+    private lateinit var selectionPanel: SelectionPanel
 
     private var emojiVisible = false
     private var clipboardVisible = false
+    private var selectionVisible = false
     private var suggestionBarVisible = true
 
     private val coroutineScope: CoroutineScope by lazy {
@@ -115,6 +118,7 @@ class NXInputMethodService : InputMethodService() {
                 override fun onClipboard() { openClipboardPanel() }
                 override fun onEmoji() { openEmojiKeyboard() }
                 override fun onVoice() { startVoiceInput() }
+                override fun onSelectionMode() { openSelectionPanel() }
                 override fun onSettings() { openSettings() }
                 override fun onCollapse() { toggleSuggestionBar() }
             })
@@ -170,6 +174,39 @@ class NXInputMethodService : InputMethodService() {
             )
         }
         keyboardArea.addView(clipboardPanel)
+
+        selectionPanel = SelectionPanel(this).apply {
+            visibility = View.GONE
+            configure(themeManager, object : SelectionPanel.Callback {
+                override fun onMoveCursor(direction: Int, withSelection: Boolean) {
+                    moveCursor(direction, withSelection)
+                }
+                override fun onSelectAll() { selectAllText() }
+                override fun onCopy() {
+                    copySelection()
+                    closeSelectionPanel()
+                }
+                override fun onCut() {
+                    cutSelection()
+                    closeSelectionPanel()
+                }
+                override fun onPaste() {
+                    pasteFromSystem()
+                    closeSelectionPanel()
+                }
+                override fun onPasteWithSpace() {
+                    pasteFromSystem(prependSpace = true)
+                    closeSelectionPanel()
+                }
+                override fun onDelete() { sendBackspace() }
+                override fun onClose() { closeSelectionPanel() }
+            })
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                resources.displayMetrics.density.let { (it * 280).toInt() }
+            )
+        }
+        keyboardArea.addView(selectionPanel)
 
         return rootContainer
     }
@@ -325,6 +362,7 @@ class NXInputMethodService : InputMethodService() {
             closeEmojiPanel()
         } else {
             if (clipboardVisible) closeClipboardPanel()
+            if (selectionVisible) closeSelectionPanel()
             keyboardView.visibility = View.GONE
             emojiKeyboardView.visibility = View.VISIBLE
             emojiVisible = true
@@ -341,6 +379,7 @@ class NXInputMethodService : InputMethodService() {
         if (clipboardVisible) {
             closeClipboardPanel()
         } else {
+            if (selectionVisible) closeSelectionPanel()
             keyboardView.visibility = View.GONE
             emojiKeyboardView.visibility = View.GONE
             emojiVisible = false
@@ -357,6 +396,78 @@ class NXInputMethodService : InputMethodService() {
     }
 
     fun toggleClipboardToolbar() = openClipboardPanel()
+
+    fun openSelectionPanel() {
+        if (selectionVisible) {
+            closeSelectionPanel()
+        } else {
+            keyboardView.visibility = View.GONE
+            emojiKeyboardView.visibility = View.GONE
+            clipboardPanel.visibility = View.GONE
+            emojiVisible = false
+            clipboardVisible = false
+            selectionPanel.visibility = View.VISIBLE
+            selectionPanel.applyTheme()
+            selectionVisible = true
+        }
+    }
+
+    fun closeSelectionPanel() {
+        selectionPanel.visibility = View.GONE
+        keyboardView.visibility = View.VISIBLE
+        selectionVisible = false
+    }
+
+    fun moveCursor(direction: Int, withSelection: Boolean) {
+        val ic = currentInputConnection ?: return
+        val keyCode = when (direction) {
+            -1 -> android.view.KeyEvent.KEYCODE_DPAD_LEFT
+            1  -> android.view.KeyEvent.KEYCODE_DPAD_RIGHT
+            2  -> android.view.KeyEvent.KEYCODE_DPAD_UP
+            -2 -> android.view.KeyEvent.KEYCODE_DPAD_DOWN
+            else -> return
+        }
+        val meta = if (withSelection) android.view.KeyEvent.META_SHIFT_ON or android.view.KeyEvent.META_SHIFT_LEFT_ON else 0
+        val now = android.os.SystemClock.uptimeMillis()
+        if (withSelection) {
+            ic.sendKeyEvent(android.view.KeyEvent(now, now, android.view.KeyEvent.ACTION_DOWN,
+                android.view.KeyEvent.KEYCODE_SHIFT_LEFT, 0, meta))
+        }
+        ic.sendKeyEvent(android.view.KeyEvent(now, now, android.view.KeyEvent.ACTION_DOWN, keyCode, 0, meta))
+        ic.sendKeyEvent(android.view.KeyEvent(now, now, android.view.KeyEvent.ACTION_UP, keyCode, 0, meta))
+        if (withSelection) {
+            ic.sendKeyEvent(android.view.KeyEvent(now, now, android.view.KeyEvent.ACTION_UP,
+                android.view.KeyEvent.KEYCODE_SHIFT_LEFT, 0, 0))
+        }
+    }
+
+    fun selectAllText() {
+        val ic = currentInputConnection ?: return
+        try { ic.performContextMenuAction(android.R.id.selectAll) } catch (_: Throwable) {}
+    }
+
+    fun copySelection() {
+        val ic = currentInputConnection ?: return
+        try { ic.performContextMenuAction(android.R.id.copy) } catch (_: Throwable) {}
+    }
+
+    fun cutSelection() {
+        val ic = currentInputConnection ?: return
+        try { ic.performContextMenuAction(android.R.id.cut) } catch (_: Throwable) {}
+    }
+
+    fun pasteFromSystem(prependSpace: Boolean = false) {
+        val ic = currentInputConnection ?: return
+        try {
+            val cb = getSystemService(Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+            val text = cb?.primaryClip?.getItemAt(0)?.coerceToText(this)?.toString() ?: return
+            if (prependSpace) {
+                ic.commitText(" $text ", 1)
+            } else {
+                ic.commitText(text, 1)
+            }
+        } catch (_: Throwable) {}
+    }
 
     fun toggleSuggestionBar() {
         suggestionBarVisible = !suggestionBarVisible

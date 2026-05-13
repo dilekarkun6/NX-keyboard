@@ -123,6 +123,13 @@ class SettingsActivity : AppCompatActivity() {
             ) { uri: Uri? ->
                 if (uri != null) {
                     val ctx = requireContext()
+                    val mime = ctx.contentResolver.getType(uri).orEmpty()
+                    if (!mime.startsWith("image/")) {
+                        android.widget.Toast.makeText(ctx,
+                            "Sadece resim dosyası seç / Image files only",
+                            android.widget.Toast.LENGTH_LONG).show()
+                        return@registerForActivityResult
+                    }
                     try {
                         ctx.contentResolver.takePersistableUriPermission(
                             uri,
@@ -140,6 +147,13 @@ class SettingsActivity : AppCompatActivity() {
             ) { uri: Uri? ->
                 if (uri != null) {
                     val ctx = requireContext()
+                    val mime = ctx.contentResolver.getType(uri).orEmpty()
+                    if (!mime.startsWith("audio/")) {
+                        android.widget.Toast.makeText(ctx,
+                            "Sadece ses dosyası seç / Audio files only",
+                            android.widget.Toast.LENGTH_LONG).show()
+                        return@registerForActivityResult
+                    }
                     try {
                         ctx.contentResolver.takePersistableUriPermission(
                             uri,

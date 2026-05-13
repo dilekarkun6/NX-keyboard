@@ -61,6 +61,17 @@ class EmojiKeyboardView @JvmOverloads constructor(
         post { (grid.adapter as? EmojiAdapter)?.notifyDataSetChanged() }
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        try { androidx.emoji2.text.EmojiCompat.get().load() } catch (_: Throwable) {}
+        postDelayed({
+            (grid.adapter as? EmojiAdapter)?.notifyDataSetChanged()
+        }, 400)
+        postDelayed({
+            (grid.adapter as? EmojiAdapter)?.notifyDataSetChanged()
+        }, 1500)
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         com.nxkeyboard.EmojiCompatState.removeListener(emojiReadyListener)
