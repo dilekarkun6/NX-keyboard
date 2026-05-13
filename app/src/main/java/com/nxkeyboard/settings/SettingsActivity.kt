@@ -44,6 +44,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 "app_language" -> {
                     applyAppLanguage()
+                    syncKeyboardWithAppLanguage()
                     recreate()
                 }
             }
@@ -59,6 +60,34 @@ class SettingsActivity : AppCompatActivity() {
             androidx.core.os.LocaleListCompat.forLanguageTags(lang)
         }
         AppCompatDelegate.setApplicationLocales(locales)
+    }
+
+    private fun syncKeyboardWithAppLanguage() {
+        val lang = PrefsHelper.getString(this, "app_language", "system")
+        if (lang == "system" || lang.isBlank()) return
+        val keyboardLocale = when (lang) {
+            "en" -> "en"
+            "tr" -> "tr"
+            "az" -> "az"
+            "de" -> "de"
+            "fr" -> "fr"
+            "es" -> "es"
+            "ru" -> "ru"
+            "ar" -> "ar"
+            "ja" -> "ja"
+            "hi" -> "hi"
+            else -> return
+        }
+        val prefs = PrefsHelper.get(this)
+        val current = prefs.getStringSet("enabled_languages", emptySet()) ?: emptySet()
+        val updated = LinkedHashSet<String>().apply {
+            add(keyboardLocale)
+            addAll(current)
+        }
+        prefs.edit()
+            .putStringSet("enabled_languages", updated)
+            .putString("current_locale", keyboardLocale)
+            .apply()
     }
 
     override fun onDestroy() {

@@ -28,12 +28,20 @@ class LanguageManager(private val context: Context) {
             enabledLanguages.add("en")
             enabledLanguages.add("tr")
         }
+        val preferredLocale = prefs.getString("current_locale", null)
+        if (!preferredLocale.isNullOrBlank()) {
+            val idx = enabledLanguages.indexOf(preferredLocale)
+            if (idx >= 0) currentIndex = idx
+        }
         currentIndex = currentIndex.coerceIn(0, enabledLanguages.size - 1)
     }
 
     fun switchToNext() {
         if (enabledLanguages.size <= 1) return
         currentIndex = (currentIndex + 1) % enabledLanguages.size
+        PrefsHelper.get(context).edit()
+            .putString("current_locale", enabledLanguages[currentIndex])
+            .apply()
     }
 
     fun setCurrentLocale(locale: String) {
