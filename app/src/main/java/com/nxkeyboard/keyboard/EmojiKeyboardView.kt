@@ -58,7 +58,7 @@ class EmojiKeyboardView @JvmOverloads constructor(
     }
 
     private val emojiReadyListener: () -> Unit = {
-        post { (gridRecycler.adapter as? EmojiAdapter)?.notifyDataSetChanged() }
+        post { (grid.adapter as? EmojiAdapter)?.notifyDataSetChanged() }
     }
 
     override fun onDetachedFromWindow() {
