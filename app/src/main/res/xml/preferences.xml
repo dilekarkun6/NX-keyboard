@@ -96,6 +96,11 @@
             app:title="@string/show_ai_button_title"
             app:summary="@string/show_ai_button_summary"
             app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="show_selection_button"
+            app:title="@string/show_selection_button_title"
+            app:summary="@string/show_selection_button_summary"
+            app:defaultValue="true" />
         <Preference
             app:key="keyboard_background"
             app:title="@string/keyboard_background_title"

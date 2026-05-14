@@ -138,7 +138,7 @@ class NXKeyboardView @JvmOverloads constructor(
                     .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build()
                 soundPool = SoundPool.Builder()
-                    .setMaxStreams(4)
+                    .setMaxStreams(1)
                     .setAudioAttributes(attrs)
                     .build()
             }
@@ -325,9 +325,9 @@ class NXKeyboardView @JvmOverloads constructor(
             canvas.drawBitmap(bmp, null, backgroundDestRect, null)
             val dark = themeManager?.isDarkActive() ?: false
             backgroundOverlayPaint.color = if (dark)
-                Color.argb(70, 0, 0, 0)
+                Color.argb(40, 0, 0, 0)
             else
-                Color.argb(40, 255, 255, 255)
+                Color.argb(20, 255, 255, 255)
             canvas.drawRect(backgroundDestRect, backgroundOverlayPaint)
         }
         for (kr in keyRects) {

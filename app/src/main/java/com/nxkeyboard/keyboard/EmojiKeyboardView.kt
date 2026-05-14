@@ -193,7 +193,14 @@ class EmojiKeyboardView @JvmOverloads constructor(
 
         override fun onBindViewHolder(holder: VH, position: Int) {
             val emoji = items[position]
-            holder.text.text = emoji
+            val processed = try {
+                if (androidx.emoji2.text.EmojiCompat.get().loadState == androidx.emoji2.text.EmojiCompat.LOAD_STATE_SUCCEEDED) {
+                    androidx.emoji2.text.EmojiCompat.get().process(emoji) ?: emoji
+                } else {
+                    emoji
+                }
+            } catch (_: Throwable) { emoji }
+            holder.text.text = processed
             holder.text.setOnClickListener { onClick(emoji) }
         }
 

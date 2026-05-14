@@ -215,7 +215,7 @@ class SettingsActivity : AppCompatActivity() {
                     .getString("keyboard_background_uri", "")
                 pref.summary = if (uri.isNullOrBlank()) getString(R.string.keyboard_background_summary) else getString(R.string.keyboard_background_set)
                 pref.setOnPreferenceClickListener {
-                    imagePicker.launch(arrayOf("image/*"))
+                    imagePicker.launch(arrayOf("image/jpeg", "image/png", "image/webp", "image/gif", "image/bmp", "image/heic", "image/heif"))
                     true
                 }
             }
@@ -236,7 +236,7 @@ class SettingsActivity : AppCompatActivity() {
                 else
                     getString(R.string.custom_sound_set)
                 pref.setOnPreferenceClickListener {
-                    audioPicker.launch(arrayOf("audio/*"))
+                    audioPicker.launch(arrayOf("audio/mpeg", "audio/mp4", "audio/ogg", "audio/wav", "audio/x-wav", "audio/aac", "audio/x-m4a"))
                     true
                 }
             }

@@ -50,6 +50,8 @@
     <string name="show_translate_button_summary">Show the 🌍 translate button in the top bar</string>
     <string name="show_ai_button_title">Show AI correction button</string>
     <string name="show_ai_button_summary">Show the ✨ AI button in the top bar</string>
+    <string name="show_selection_button_title">Show selection mode button</string>
+    <string name="show_selection_button_summary">Show ✂ in the top bar for cursor/select/copy/paste panel</string>
     <string name="keyboard_background_title">Keyboard background image</string>
     <string name="keyboard_background_summary">Tap to choose an image</string>
     <string name="keyboard_background_set">✓ Background image set</string>

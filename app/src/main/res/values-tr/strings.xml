@@ -50,6 +50,8 @@
     <string name="show_translate_button_summary">Üst barda 🌍 çeviri butonunu göster</string>
     <string name="show_ai_button_title">AI düzeltme butonunu göster</string>
     <string name="show_ai_button_summary">Üst barda ✨ AI butonunu göster</string>
+    <string name="show_selection_button_title">Seçme modu butonunu göster</string>
+    <string name="show_selection_button_summary">Üst barda ✂ butonu — imleç hareketi, seçim, kopyala/yapıştır paneli</string>
     <string name="keyboard_background_title">Klavye arkaplan resmi</string>
     <string name="keyboard_background_summary">Resim seçmek için dokunun</string>
     <string name="keyboard_background_set">✓ Arkaplan ayarlandı</string>

@@ -4,7 +4,7 @@
         <Key codes="126" keyLabel="~" keyWidth="10" />
         <Key codes="8226" keyLabel="•" keyWidth="10" />
         <Key codes="124" keyLabel="|" keyWidth="10" />
-        <Key codes="8211" keyLabel="–" keyWidth="10" />
+        <Key codes="182" keyLabel="¶" keyWidth="10" />
         <Key codes="8730" keyLabel="√" keyWidth="10" />
         <Key codes="960" keyLabel="π" keyWidth="10" />
         <Key codes="247" keyLabel="÷" keyWidth="10" />
