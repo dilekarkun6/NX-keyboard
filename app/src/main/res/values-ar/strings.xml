@@ -110,4 +110,12 @@
     <string name="ai_correction_error">خطأ في التصحيح: %1$s</string>
     <string name="voice_permission_required">إذن الميكروفون مطلوب — من الإعدادات</string>
     <string name="voice_error">خطأ إدخال صوتي (%1$d)</string>
+    <string name="ai_no_change">لم يتمكن الذكاء الاصطناعي من تحسين النص</string>
+    <string name="cat_dev">وضع المطور</string>
+    <string name="dev_force_crash_title">إجبار التطبيق على الانهيار</string>
+    <string name="dev_force_crash_summary">يتعطل خلال ثانية لاختبار سجل الأخطاء</string>
+    <string name="dev_disable_title">تعطيل وضع المطور</string>
+    <string name="dev_mode_enabled">تم تفعيل وضع المطور!</string>
+    <string name="dev_mode_disabled">تم تعطيل وضع المطور</string>
+    <string name="dev_mode_taps_remaining">باقي %1$d خطوات لوضع المطور</string>
 </resources>

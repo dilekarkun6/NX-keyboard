@@ -110,4 +110,12 @@
     <string name="ai_correction_error">修正エラー: %1$s</string>
     <string name="voice_permission_required">マイクの権限が必要です — 設定から</string>
     <string name="voice_error">音声入力エラー (%1$d)</string>
+    <string name="ai_no_change">AI はテキストを改善できませんでした</string>
+    <string name="cat_dev">開発者モード</string>
+    <string name="dev_force_crash_title">強制クラッシュ</string>
+    <string name="dev_force_crash_summary">1秒後にクラッシュしてログをテスト</string>
+    <string name="dev_disable_title">開発者モードを無効化</string>
+    <string name="dev_mode_enabled">開発者モードを有効化!</string>
+    <string name="dev_mode_disabled">開発者モードを無効化</string>
+    <string name="dev_mode_taps_remaining">開発者モードまで残り %1$d 回</string>
 </resources>

@@ -147,4 +147,12 @@
 
     <string name="voice_permission_required">Mikrofon izni gerekli — Ayarlardan verin</string>
     <string name="voice_error">Sesli yazma hatası (%1$d)</string>
+    <string name="ai_no_change">AI metni iyileştiremedi</string>
+    <string name="cat_dev">Geliştirici modu</string>
+    <string name="dev_force_crash_title">Çökmeye zorla</string>
+    <string name="dev_force_crash_summary">1 saniye sonra çöker, hata kaydını test eder</string>
+    <string name="dev_disable_title">Geliştirici modunu kapat</string>
+    <string name="dev_mode_enabled">Geliştirici modu açıldı!</string>
+    <string name="dev_mode_disabled">Geliştirici modu kapatıldı</string>
+    <string name="dev_mode_taps_remaining">Geliştirici moduna %1$d adım kaldı</string>
 </resources>

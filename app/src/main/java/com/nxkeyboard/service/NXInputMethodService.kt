@@ -516,11 +516,14 @@ class NXInputMethodService : InputMethodService() {
     fun runAiCorrection() {
         val ic = currentInputConnection ?: return
         val selected = ic.getSelectedText(0)?.toString()
-        val context = if (selected.isNullOrEmpty()) {
+        val rawContext = if (selected.isNullOrEmpty()) {
             ic.getTextBeforeCursor(200, 0)?.toString().orEmpty()
         } else {
             selected
         }
+        val trailing = rawContext.length - rawContext.trimEnd().length
+        val context = rawContext.trimEnd()
+        val trailingChars = if (trailing > 0) rawContext.substring(rawContext.length - trailing) else ""
         if (context.isBlank()) {
             Toast.makeText(this, getString(R.string.ai_no_text), Toast.LENGTH_SHORT).show()
             return
@@ -534,11 +537,17 @@ class NXInputMethodService : InputMethodService() {
         coroutineScope.launch {
             val result = aiManager.correct(context, languageManager.displayNameOf(locale))
             result.onSuccess { corrected ->
+                val cleaned = corrected.trim().removeSurrounding("\"").removeSurrounding("'").trim()
+                if (cleaned.isBlank() || cleaned.equals("null", ignoreCase = true) || cleaned == context) {
+                    Toast.makeText(this@NXInputMethodService, getString(R.string.ai_no_change), Toast.LENGTH_SHORT).show()
+                    return@onSuccess
+                }
+                val finalText = cleaned + trailingChars
                 if (selected.isNullOrEmpty()) {
-                    ic.deleteSurroundingText(context.length, 0)
-                    ic.commitText(corrected, 1)
+                    ic.deleteSurroundingText(rawContext.length, 0)
+                    ic.commitText(finalText, 1)
                 } else {
-                    ic.commitText(corrected, 1)
+                    ic.commitText(finalText, 1)
                 }
             }.onFailure { error ->
                 CrashLogger.logNonFatal(this@NXInputMethodService, "AIManager.correct", error)
@@ -550,11 +559,14 @@ class NXInputMethodService : InputMethodService() {
     fun runAiTranslation(targetLang: String) {
         val ic = currentInputConnection ?: return
         val selected = ic.getSelectedText(0)?.toString()
-        val source = if (selected.isNullOrEmpty()) {
+        val rawSource = if (selected.isNullOrEmpty()) {
             ic.getTextBeforeCursor(500, 0)?.toString().orEmpty()
         } else {
             selected
         }
+        val trailing = rawSource.length - rawSource.trimEnd().length
+        val source = rawSource.trimEnd()
+        val trailingChars = if (trailing > 0) rawSource.substring(rawSource.length - trailing) else ""
         if (source.isBlank()) {
             Toast.makeText(this, getString(R.string.ai_no_text), Toast.LENGTH_SHORT).show()
             return
@@ -567,11 +579,17 @@ class NXInputMethodService : InputMethodService() {
         coroutineScope.launch {
             val result = aiManager.translate(source, targetLang)
             result.onSuccess { translated ->
+                val cleaned = translated.trim().removeSurrounding("\"").removeSurrounding("'").trim()
+                if (cleaned.isBlank() || cleaned.equals("null", ignoreCase = true)) {
+                    Toast.makeText(this@NXInputMethodService, getString(R.string.ai_no_change), Toast.LENGTH_SHORT).show()
+                    return@onSuccess
+                }
+                val finalText = cleaned + trailingChars
                 if (selected.isNullOrEmpty()) {
-                    ic.deleteSurroundingText(source.length, 0)
-                    ic.commitText(translated, 1)
+                    ic.deleteSurroundingText(rawSource.length, 0)
+                    ic.commitText(finalText, 1)
                 } else {
-                    ic.commitText(translated, 1)
+                    ic.commitText(finalText, 1)
                 }
             }.onFailure { error ->
                 CrashLogger.logNonFatal(this@NXInputMethodService, "AIManager.translate", error)

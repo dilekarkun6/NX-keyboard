@@ -110,4 +110,12 @@ Nəsə kopyaladıqda burada görünəcək.</string>
     <string name="ai_correction_error">Düzəltmə xətası: %1$s</string>
     <string name="voice_permission_required">Mikrofon icazəsi tələb olunur — Tənzimləmələrdən verin</string>
     <string name="voice_error">Səslə yazı xətası (%1$d)</string>
+    <string name="ai_no_change">AI mətni təkmilləşdirə bilmədi</string>
+    <string name="cat_dev">Tərtibatçı rejimi</string>
+    <string name="dev_force_crash_title">Çökməyə məcbur et</string>
+    <string name="dev_force_crash_summary">1 saniyə sonra çökər, xəta qeydini test edər</string>
+    <string name="dev_disable_title">Tərtibatçı rejimini söndür</string>
+    <string name="dev_mode_enabled">Tərtibatçı rejimi açıldı!</string>
+    <string name="dev_mode_disabled">Tərtibatçı rejimi söndürüldü</string>
+    <string name="dev_mode_taps_remaining">Tərtibatçı rejiminə %1$d addım qaldı</string>
 </resources>

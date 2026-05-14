@@ -110,4 +110,12 @@ Lo que copies aparecerá aquí.</string>
     <string name="ai_correction_error">Error de corrección: %1$s</string>
     <string name="voice_permission_required">Permiso de micrófono requerido — desde Ajustes</string>
     <string name="voice_error">Error de entrada de voz (%1$d)</string>
+    <string name="ai_no_change">La IA no pudo mejorar el texto</string>
+    <string name="cat_dev">Modo desarrollador</string>
+    <string name="dev_force_crash_title">Forzar crash</string>
+    <string name="dev_force_crash_summary">Crashea en 1s para probar</string>
+    <string name="dev_disable_title">Desactivar modo desarrollador</string>
+    <string name="dev_mode_enabled">¡Modo desarrollador activado!</string>
+    <string name="dev_mode_disabled">Modo desarrollador desactivado</string>
+    <string name="dev_mode_taps_remaining">Faltan %1$d pasos</string>
 </resources>

@@ -147,4 +147,12 @@
 
     <string name="voice_permission_required">Microphone permission required — grant it in Settings</string>
     <string name="voice_error">Voice input error (%1$d)</string>
+    <string name="ai_no_change">AI couldn't improve the text</string>
+    <string name="cat_dev">Developer mode</string>
+    <string name="dev_force_crash_title">Force crash</string>
+    <string name="dev_force_crash_summary">Crashes the app in 1s to test error logging</string>
+    <string name="dev_disable_title">Disable developer mode</string>
+    <string name="dev_mode_enabled">Developer mode unlocked!</string>
+    <string name="dev_mode_disabled">Developer mode disabled</string>
+    <string name="dev_mode_taps_remaining">You are %1$d steps from developer mode</string>
 </resources>

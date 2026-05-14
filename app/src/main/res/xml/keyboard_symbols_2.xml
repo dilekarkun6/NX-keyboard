@@ -32,7 +32,7 @@
         <Key codes="125" keyLabel="}" keyWidth="9" />
         <Key codes="60"  keyLabel="&lt;" keyWidth="9" />
         <Key codes="62"  keyLabel="&gt;" keyWidth="9" />
-        <Key codes="92"  keyLabel="\" keyWidth="9" />
+        <Key codes="92"  keyLabel="&#92;" keyWidth="9" />
         <Key codes="10003" keyLabel="✓" keyWidth="9" />
         <Key codes="-5"  keyLabel="⌫" keyWidth="14" />
     </Row>

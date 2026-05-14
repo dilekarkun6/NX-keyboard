@@ -178,4 +178,16 @@
             app:summary="@string/about_license_summary" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:key="cat_dev"
+        app:title="@string/cat_dev">
+        <Preference
+            app:key="dev_force_crash"
+            app:title="@string/dev_force_crash_title"
+            app:summary="@string/dev_force_crash_summary" />
+        <Preference
+            app:key="dev_disable"
+            app:title="@string/dev_disable_title" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

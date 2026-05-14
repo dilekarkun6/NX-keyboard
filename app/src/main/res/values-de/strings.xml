@@ -110,4 +110,12 @@ Kopierter Text erscheint hier.</string>
     <string name="ai_correction_error">Korrekturfehler: %1$s</string>
     <string name="voice_permission_required">Mikrofon-Berechtigung erforderlich — in Einstellungen erteilen</string>
     <string name="voice_error">Spracheingabefehler (%1$d)</string>
+    <string name="ai_no_change">AI konnte den Text nicht verbessern</string>
+    <string name="cat_dev">Entwickler-Modus</string>
+    <string name="dev_force_crash_title">Absturz erzwingen</string>
+    <string name="dev_force_crash_summary">Stürzt in 1s ab um Fehlerprotokoll zu testen</string>
+    <string name="dev_disable_title">Entwickler-Modus deaktivieren</string>
+    <string name="dev_mode_enabled">Entwickler-Modus aktiviert!</string>
+    <string name="dev_mode_disabled">Entwickler-Modus deaktiviert</string>
+    <string name="dev_mode_taps_remaining">Noch %1$d Schritte zum Entwickler-Modus</string>
 </resources>

@@ -83,8 +83,11 @@ class AIManager(private val context: Context) {
         if (text.isBlank()) return@withContext Result.failure(IllegalArgumentException("Empty text"))
         val phoneticHints = PrefsHelper.getString(context, "phonetic_dict", "")
         val hintsBlock = if (phoneticHints.isNotBlank()) {
-            "\nThe user has a personal phonetic dictionary. When you see a token on the left, " +
-                "interpret it as the right-hand value:\n$phoneticHints\n"
+            "\n\nIMPORTANT — USER'S PHONETIC DICTIONARY (apply these substitutions exactly, " +
+                "case-insensitive token match; the LEFT side is what the user types, the RIGHT " +
+                "side is what they actually mean — always replace left→right):\n$phoneticHints\n" +
+                "These substitutions take priority over your own guesses. If you see a left-side " +
+                "token in the text, you MUST replace it with the right-side value.\n"
         } else ""
         val prompt = "You are an expert linguist correcting text typed on a phone in $language. " +
             "The writer often spells phonetically, mistypes adjacent keys, omits diacritics, drops " +

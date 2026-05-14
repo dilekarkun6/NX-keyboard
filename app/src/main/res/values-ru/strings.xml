@@ -110,4 +110,12 @@
     <string name="ai_correction_error">Ошибка коррекции: %1$s</string>
     <string name="voice_permission_required">Требуется разрешение микрофона — в настройках</string>
     <string name="voice_error">Ошибка голосового ввода (%1$d)</string>
+    <string name="ai_no_change">ИИ не смог улучшить текст</string>
+    <string name="cat_dev">Режим разработчика</string>
+    <string name="dev_force_crash_title">Принудительный сбой</string>
+    <string name="dev_force_crash_summary">Сбой через 1с для теста</string>
+    <string name="dev_disable_title">Отключить режим разработчика</string>
+    <string name="dev_mode_enabled">Режим разработчика разблокирован!</string>
+    <string name="dev_mode_disabled">Режим разработчика отключён</string>
+    <string name="dev_mode_taps_remaining">Осталось %1$d шагов</string>
 </resources>

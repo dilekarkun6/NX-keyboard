@@ -110,4 +110,12 @@
     <string name="ai_correction_error">सुधार त्रुटि: %1$s</string>
     <string name="voice_permission_required">माइक्रोफ़ोन की अनुमति ज़रूरी — सेटिंग्स से दें</string>
     <string name="voice_error">वॉइस इनपुट त्रुटि (%1$d)</string>
+    <string name="ai_no_change">AI टेक्स्ट सुधार नहीं सका</string>
+    <string name="cat_dev">डेवलपर मोड</string>
+    <string name="dev_force_crash_title">क्रैश फ़ोर्स करें</string>
+    <string name="dev_force_crash_summary">1 सेकंड में क्रैश करें, लॉग टेस्ट करें</string>
+    <string name="dev_disable_title">डेवलपर मोड बंद करें</string>
+    <string name="dev_mode_enabled">डेवलपर मोड चालू!</string>
+    <string name="dev_mode_disabled">डेवलपर मोड बंद</string>
+    <string name="dev_mode_taps_remaining">डेवलपर मोड के लिए %1$d और टैप</string>
 </resources>

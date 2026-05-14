@@ -249,8 +249,55 @@ class SettingsActivity : AppCompatActivity() {
                 true
             }
 
-            findPreference<Preference>("about_version")?.summary =
-                getString(R.string.about_version_summary, "1.0.0")
+            val versionPref = findPreference<Preference>("about_version")
+            versionPref?.summary = getString(R.string.about_version_summary, "1.0.0")
+            var versionTaps = 0
+            versionPref?.setOnPreferenceClickListener {
+                versionTaps += 1
+                val remaining = 10 - versionTaps
+                if (versionTaps >= 10) {
+                    PrefsHelper.get(requireContext()).edit()
+                        .putBoolean("dev_mode_enabled", true)
+                        .apply()
+                    android.widget.Toast.makeText(requireContext(),
+                        getString(R.string.dev_mode_enabled),
+                        android.widget.Toast.LENGTH_LONG).show()
+                    updateDevModeVisibility()
+                    versionTaps = 0
+                } else if (versionTaps >= 6) {
+                    android.widget.Toast.makeText(requireContext(),
+                        getString(R.string.dev_mode_taps_remaining, remaining),
+                        android.widget.Toast.LENGTH_SHORT).show()
+                }
+                true
+            }
+
+            findPreference<Preference>("about_license")?.setOnPreferenceClickListener {
+                showLicenseDialog()
+                true
+            }
+
+            updateDevModeVisibility()
+
+            findPreference<Preference>("dev_force_crash")?.setOnPreferenceClickListener {
+                android.widget.Toast.makeText(requireContext(),
+                    "Force crash in 1 second…", android.widget.Toast.LENGTH_SHORT).show()
+                view?.postDelayed({
+                    throw RuntimeException("Developer mode forced crash for testing")
+                }, 1000)
+                true
+            }
+
+            findPreference<Preference>("dev_disable")?.setOnPreferenceClickListener {
+                PrefsHelper.get(requireContext()).edit()
+                    .putBoolean("dev_mode_enabled", false)
+                    .apply()
+                updateDevModeVisibility()
+                android.widget.Toast.makeText(requireContext(),
+                    getString(R.string.dev_mode_disabled),
+                    android.widget.Toast.LENGTH_SHORT).show()
+                true
+            }
 
             updateErrorLogSummary()
 
@@ -264,6 +311,36 @@ class SettingsActivity : AppCompatActivity() {
                 updateErrorLogSummary()
                 true
             }
+        }
+
+        private fun updateDevModeVisibility() {
+            val enabled = PrefsHelper.get(requireContext())
+                .getBoolean("dev_mode_enabled", false)
+            findPreference<Preference>("dev_force_crash")?.isVisible = enabled
+            findPreference<Preference>("dev_disable")?.isVisible = enabled
+            findPreference<androidx.preference.PreferenceCategory>("cat_dev")?.isVisible = enabled
+        }
+
+        private fun showLicenseDialog() {
+            val ctx = requireContext()
+            val licenseText = try {
+                ctx.resources.openRawResource(R.raw.license_agplv3).bufferedReader().use { it.readText() }
+            } catch (_: Throwable) {
+                "GNU Affero General Public License v3.0\n\nSee https://www.gnu.org/licenses/agpl-3.0.html"
+            }
+            val scrollView = android.widget.ScrollView(ctx)
+            val tv = android.widget.TextView(ctx).apply {
+                text = licenseText
+                textSize = 12f
+                setPadding(48, 32, 48, 32)
+                typeface = android.graphics.Typeface.MONOSPACE
+            }
+            scrollView.addView(tv)
+            androidx.appcompat.app.AlertDialog.Builder(ctx)
+                .setTitle("GNU AGPLv3")
+                .setView(scrollView)
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
         }
 
         private fun updateErrorLogSummary() {
