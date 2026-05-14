@@ -9,7 +9,7 @@ class NXKeyboardApplication : Application() {
         super.onCreate()
         try {
             val config = BundledEmojiCompatConfig(this)
-                .setReplaceAll(true)
+                .setReplaceAll(false)
                 .setMetadataLoadStrategy(EmojiCompat.LOAD_STRATEGY_DEFAULT)
                 .registerInitCallback(object : EmojiCompat.InitCallback() {
                     override fun onInitialized() {

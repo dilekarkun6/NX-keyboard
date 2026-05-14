@@ -50,6 +50,7 @@ class NXKeyboardView @JvmOverloads constructor(
     private var soundMode: String = "off"
     private var customSoundId: Int = 0
     private var currentSoundStreamId: Int = 0
+    private var lastSoundTime: Long = 0L
     private var customSoundReady: Boolean = false
 
     private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -204,10 +205,16 @@ class NXKeyboardView @JvmOverloads constructor(
             }
             "custom" -> {
                 if (customSoundReady && customSoundId != 0) {
+                    val now = android.os.SystemClock.uptimeMillis()
+                    if (now - lastSoundTime < 50L) return
+                    lastSoundTime = now
                     val volume = PrefsHelper.getString(context, "custom_sound_volume", "0.6").toFloatOrNull() ?: 0.6f
                     soundPool?.let { sp ->
                         if (currentSoundStreamId != 0) {
-                            try { sp.stop(currentSoundStreamId) } catch (_: Throwable) {}
+                            try {
+                                sp.stop(currentSoundStreamId)
+                                sp.setVolume(currentSoundStreamId, 0f, 0f)
+                            } catch (_: Throwable) {}
                         }
                         currentSoundStreamId = sp.play(customSoundId, volume, volume, 1, 0, 1f)
                     }
@@ -325,9 +332,9 @@ class NXKeyboardView @JvmOverloads constructor(
             canvas.drawBitmap(bmp, null, backgroundDestRect, null)
             val dark = themeManager?.isDarkActive() ?: false
             backgroundOverlayPaint.color = if (dark)
-                Color.argb(40, 0, 0, 0)
+                Color.argb(20, 0, 0, 0)
             else
-                Color.argb(20, 255, 255, 255)
+                Color.argb(10, 255, 255, 255)
             canvas.drawRect(backgroundDestRect, backgroundOverlayPaint)
         }
         for (kr in keyRects) {
